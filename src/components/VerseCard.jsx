@@ -32,7 +32,9 @@ export default function VerseCard({ verse, compact = false, showAsk = true }) {
 
       {/* Sanskrit */}
       {!compact && (
-        <p className="sanskrit" style={{ fontSize: "1rem" }}>{verse.sanskrit}</p>
+        <div style={{ padding: "0.8rem", background: "rgba(245,200,66,0.03)", borderRadius: "var(--radius-sm)", border: "1px solid rgba(245,200,66,0.08)" }}>
+          <p className="sanskrit" style={{ fontSize: "1.15rem", textAlign: "center" }}>{verse.sanskrit}</p>
+        </div>
       )}
 
       {/* Transliteration */}
@@ -87,11 +89,11 @@ export default function VerseCard({ verse, compact = false, showAsk = true }) {
       )}
 
       {/* Glow effect */}
-      <div style={{
-        position: "absolute", top: 0, right: 0,
-        width: "120px", height: "120px",
-        background: "radial-gradient(circle, rgba(245,200,66,0.06) 0%, transparent 70%)",
-        pointerEvents: "none",
+      <div className="anim-pulse" style={{
+        position: "absolute", top: "-50px", right: "-50px",
+        width: "200px", height: "200px",
+        background: "radial-gradient(circle, rgba(255,123,28,0.12) 0%, transparent 60%)",
+        pointerEvents: "none", zIndex: 0, filter: "blur(20px)"
       }} />
     </div>
   );

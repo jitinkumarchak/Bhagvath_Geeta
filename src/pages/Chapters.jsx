@@ -9,7 +9,7 @@ export default function Chapters() {
     <div className="page" style={{ maxWidth: "1100px", margin: "0 auto", padding: "3rem 2rem" }}>
       {/* Header */}
       <div style={{ textAlign: "center", marginBottom: "3rem", animation: "fadeInUp 0.5s ease" }}>
-        <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>📖</div>
+        <div className="anim-float" style={{ fontSize: "3rem", marginBottom: "1.2rem", display: "inline-block" }}>📖</div>
         <h1 style={{ fontSize: "2.5rem", marginBottom: "0.75rem" }}>The Bhagavad Gita</h1>
         <p style={{ color: "var(--color-muted)", maxWidth: "500px", margin: "0 auto", lineHeight: 1.8 }}>
           18 chapters · 700 verses · The eternal dialogue between Arjuna and Krishna
@@ -35,6 +35,19 @@ export default function Chapters() {
             <div style={{ color: "var(--color-muted)", fontSize: "0.85rem" }}>{s.label}</div>
           </div>
         ))}
+      </div>
+      {/* 3D Book CTA */}
+      <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
+        <button
+          className="btn-primary"
+          style={{ fontSize: "1rem", padding: "0.75rem 2.2rem" }}
+          onClick={() => navigate("/book")}
+        >
+          📚 Read as 3D Book
+        </button>
+        <p style={{ color: "var(--color-muted)", fontSize: "0.8rem", marginTop: "0.5rem" }}>
+          Flip pages like a real book
+        </p>
       </div>
 
       {/* Chapters grid */}

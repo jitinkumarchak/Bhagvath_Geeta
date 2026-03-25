@@ -32,13 +32,21 @@ export default function Home() {
         textAlign: "center", padding: "2rem",
         position: "relative",
       }}>
-        {/* Background glow orbs */}
-        <div style={{
-          position: "absolute", width: "500px", height: "500px",
+        {/* Advanced Ambient Glows */}
+        <div className="anim-float" style={{
+          position: "absolute", width: "80vw", height: "80vw", maxWidth: "800px", maxHeight: "800px",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(245,200,66,0.07) 0%, transparent 70%)",
-          top: "50%", left: "50%", transform: "translate(-50%,-50%)",
-          pointerEvents: "none",
+          background: "radial-gradient(circle, rgba(255,123,28,0.06) 0%, transparent 60%)",
+          top: "-10%", left: "10%", filter: "blur(80px)",
+          pointerEvents: "none", zIndex: 0
+        }} />
+        <div className="anim-float" style={{
+          position: "absolute", width: "60vw", height: "60vw", maxWidth: "600px", maxHeight: "600px",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(245,200,66,0.05) 0%, transparent 60%)",
+          bottom: "10%", right: "5%", filter: "blur(60px)",
+          animationDelay: "-3s",
+          pointerEvents: "none", zIndex: 0
         }} />
 
         {/* Om symbol */}
@@ -57,14 +65,16 @@ export default function Home() {
         <h1
           style={{
             fontFamily: "var(--font-display)",
-            fontSize: "clamp(2.4rem, 6vw, 4.5rem)",
+            fontSize: "clamp(2.8rem, 7vw, 5.5rem)",
             fontWeight: 700,
-            lineHeight: 1.15,
-            maxWidth: "720px",
-            marginBottom: "1.2rem",
+            lineHeight: 1.1,
+            maxWidth: "800px",
+            marginBottom: "1.5rem",
             opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(30px)",
-            transition: "all 0.8s ease 0.2s",
+            transform: visible ? "translateY(0)" : "translateY(40px)",
+            transition: "all 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s",
+            textShadow: "0 0 40px rgba(245,200,66,0.15)",
+            zIndex: 1
           }}
         >
           <span className="gradient-text">Ancient Wisdom.</span>
@@ -87,16 +97,17 @@ export default function Home() {
         </p>
 
         <div style={{
-          display: "flex", gap: "1rem", flexWrap: "wrap", justifyContent: "center",
+          display: "flex", gap: "1.2rem", flexWrap: "wrap", justifyContent: "center",
           opacity: visible ? 1 : 0,
-          transform: visible ? "translateY(0)" : "translateY(20px)",
-          transition: "all 0.8s ease 0.6s",
+          transform: visible ? "translateY(0)" : "translateY(30px)",
+          transition: "all 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.6s",
+          zIndex: 1
         }}>
-          <button className="btn-primary" style={{ fontSize: "1rem", padding: "0.8rem 2rem" }}
+          <button className="btn-primary" style={{ fontSize: "1.05rem", padding: "0.9rem 2.5rem" }}
             onClick={() => navigate("/chapters")}>
             📖 Start Reading
           </button>
-          <button className="btn-ghost" style={{ fontSize: "1rem", padding: "0.8rem 2rem" }}
+          <button className="btn-ghost" style={{ fontSize: "1.05rem", padding: "0.9rem 2.5rem" }}
             onClick={() => navigate("/chat")}>
             ✨ Ask the Gita
           </button>
@@ -145,28 +156,36 @@ export default function Home() {
 
         <div style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-          gap: "1.25rem",
+          gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+          gap: "1.5rem",
         }}>
           {FEATURES.map((f, i) => (
             <div
               key={f.to}
               className="card"
               style={{
-                padding: "1.75rem",
+                padding: "2.2rem",
                 cursor: "pointer",
-                animation: `fadeInUp 0.5s ease ${i * 0.08}s backwards`,
+                animation: `fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) ${i * 0.1}s backwards`,
               }}
               onClick={() => navigate(f.to)}
             >
-              <div style={{ fontSize: "2.2rem", marginBottom: "1rem" }}>{f.icon}</div>
+              <div className="anim-float" style={{ fontSize: "2.5rem", marginBottom: "1.2rem", display: "inline-block", animationDelay: `${i * 0.2}s` }}>
+                {f.icon}
+              </div>
               <h3 style={{
-                fontFamily: "var(--font-display)", fontSize: "1.1rem",
-                marginBottom: "0.5rem", color: "var(--color-cream)",
-              }}>{f.title}</h3>
-              <p style={{ color: "var(--color-muted)", fontSize: "0.9rem", lineHeight: 1.6 }}>{f.desc}</p>
-              <div style={{ marginTop: "1.25rem", color: "var(--color-gold)", fontSize: "0.85rem" }}>
-                Explore →
+                fontFamily: "var(--font-display)", fontSize: "1.3rem",
+                marginBottom: "0.6rem", color: "var(--color-cream)", textShadow: "0 2px 10px rgba(0,0,0,0.5)"
+              }}>
+                {f.title}
+              </h3>
+              <p style={{ color: "var(--color-muted)", fontSize: "0.95rem", lineHeight: 1.7 }}>{f.desc}</p>
+              <div style={{ 
+                marginTop: "1.8rem", color: "var(--color-gold-dim)", fontSize: "0.9rem", 
+                fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase",
+                display: "inline-flex", alignItems: "center", gap: "0.5rem"
+              }}>
+                Explore <span style={{ transition: "translate 0.2s" }} className="arrow">→</span>
               </div>
             </div>
           ))}

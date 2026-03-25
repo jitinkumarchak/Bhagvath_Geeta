@@ -11,6 +11,7 @@ import LifeGuide from "./pages/LifeGuide";
 import Explore from "./pages/Explore";
 import Search from "./pages/Search";
 import Chat from "./pages/Chat";
+import BookReader from "./pages/BookReader";
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
         <Route path="/explore"               element={<Explore />} />
         <Route path="/search"               element={<Search />} />
         <Route path="/chat"                  element={<Chat />} />
+        <Route path="/book"                  element={<BookReader />} />
         {/* fallback */}
         <Route path="*"                      element={<Navigate to="/" replace />} />
       </Routes>

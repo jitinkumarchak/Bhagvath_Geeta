@@ -94,15 +94,20 @@ Answer questions about this verse with wisdom, warmth, and practical insight. Co
         </div>
 
         {/* Sanskrit */}
-        <div style={{
-          padding: "2rem",
-          background: "rgba(245,200,66,0.04)",
-          border: "1px solid var(--color-border)",
-          borderRadius: "var(--radius-lg)",
-          marginBottom: "1.5rem",
+        <div className="card" style={{
+          padding: "2.5rem 2rem",
+          marginBottom: "2rem",
           textAlign: "center",
+          position: "relative",
+          overflow: "hidden"
         }}>
-          <p className="sanskrit" style={{ fontSize: "1.15rem", lineHeight: 2.2 }}>
+          {/* Subtle ambient glow behind sanskrit */}
+          <div className="anim-pulse" style={{
+            position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
+            width: "300px", height: "150px", background: "radial-gradient(ellipse, rgba(255,123,28,0.12) 0%, transparent 60%)",
+            filter: "blur(40px)", pointerEvents: "none", zIndex: 0
+          }} />
+          <p className="sanskrit" style={{ fontSize: "1.3rem", lineHeight: 2.2, position: "relative", zIndex: 1, textShadow: "0 2px 10px rgba(0,0,0,0.5)" }}>
             {verse.sanskrit}
           </p>
         </div>
@@ -137,10 +142,10 @@ Answer questions about this verse with wisdom, warmth, and practical insight. Co
             borderLeft: "3px solid var(--color-gold-dim)",
             marginBottom: "2rem",
           }}>
-            <h3 style={{ fontSize: "0.8rem", color: "var(--color-gold)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.6rem" }}>
+            <h3 style={{ fontSize: "0.85rem", color: "var(--color-gold)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "0.8rem" }}>
               💡 Commentary
             </h3>
-            <p style={{ color: "var(--color-text)", lineHeight: 1.8, fontSize: "0.95rem" }}>
+            <p style={{ color: "var(--color-text)", lineHeight: 1.9, fontSize: "1rem" }}>
               {verse.commentary}
             </p>
           </div>
