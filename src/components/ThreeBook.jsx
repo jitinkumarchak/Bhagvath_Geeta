@@ -13,9 +13,9 @@ const CONTENT_SCALE = 1.35; // 1.35x visual boost to text
 const CSS_WIDTH = Math.round(410 / CONTENT_SCALE); 
 const CSS_HEIGHT = Math.round(560 / CONTENT_SCALE); 
 const HTML_SCALE = PAGE_WIDTH / CSS_WIDTH;
-const COVER_COLOR = "#314f35"; // Deep green physical cover
-const PAPER_COLOR = "#faf2e0";
-const PAPER_EDGE_COLOR = "#f0e6d0";
+const COVER_COLOR = "#1b3824"; // Richer, deeper green for a premium feel
+const PAPER_COLOR = "#fcf8ef"; // Slightly brighter, cleaner paper
+const PAPER_EDGE_COLOR = "#e8dcc4"; // Warmer, more aged edge
 
 function BookPage({ position, rotation, isLeft, frontContent, backContent }) {
   // To avoid clipping and z-fighting, add a tiny offset for backface
@@ -24,7 +24,7 @@ function BookPage({ position, rotation, isLeft, frontContent, backContent }) {
       <mesh castShadow receiveShadow position={[isLeft ? (-PAGE_WIDTH / 2) - SPINE_GAP : (PAGE_WIDTH / 2) + SPINE_GAP, 0, 0]}>
         {/* A thin box to act as paper thickness */}
         <boxGeometry args={[PAGE_WIDTH, PAGE_HEIGHT, 0.008]} />
-        <meshStandardMaterial color={PAPER_COLOR} roughness={0.9} />
+        <meshPhysicalMaterial color={PAPER_COLOR} roughness={0.8} clearcoat={0.1} clearcoatRoughness={0.8} />
         {/* FRONT HTML */}
         {frontContent && (
           <Html
@@ -33,7 +33,7 @@ function BookPage({ position, rotation, isLeft, frontContent, backContent }) {
             position={[0, 0, 0.005]} // just outside the box half-thickness
             style={{ width: CSS_WIDTH, height: CSS_HEIGHT, overflow: 'hidden', background: "transparent" }}
           >
-            <div style={{ width: '100%', height: '100%', userSelect: 'none', background: 'transparent' }}>
+            <div style={{ width: CSS_WIDTH, height: CSS_HEIGHT, userSelect: 'none', background: 'transparent' }}>
               {frontContent}
             </div>
           </Html>
@@ -47,7 +47,7 @@ function BookPage({ position, rotation, isLeft, frontContent, backContent }) {
             rotation-y={Math.PI}
             style={{ width: CSS_WIDTH, height: CSS_HEIGHT, overflow: 'hidden', background: "transparent" }}
           >
-            <div style={{ width: '100%', height: '100%', userSelect: 'none', background: 'transparent' }}>
+            <div style={{ width: CSS_WIDTH, height: CSS_HEIGHT, userSelect: 'none', background: 'transparent' }}>
               {backContent}
             </div>
           </Html>
@@ -68,7 +68,8 @@ function PageStack({ isLeft, depth }) {
     <mesh position={[posX, 0, posZ]} receiveShadow castShadow>
       {/* slightly smaller overall bounds so it looks inset inside the hard cover */}
       <boxGeometry args={[PAGE_WIDTH - 0.04, PAGE_HEIGHT - 0.04, depth]} />
-      <meshStandardMaterial color={PAPER_EDGE_COLOR} roughness={1} />
+      {/* Slightly shiny edges for a premium finish, sometimes resembling gold-leaf edges */}
+      <meshStandardMaterial color={PAPER_EDGE_COLOR} roughness={0.5} metalness={0.1} />
     </mesh>
   );
 }
@@ -87,8 +88,8 @@ function HardCover({ isLeft }) {
   return (
     <mesh position={[posX, 0, posZ]} receiveShadow castShadow>
       <boxGeometry args={[coverW, coverH, coverD]} />
-      {/* Nice matte dark green physical finish */}
-      <meshStandardMaterial color={COVER_COLOR} roughness={0.8} />
+      {/* Luxurious physical finish resembling leather with subtle sheen */}
+      <meshPhysicalMaterial color={COVER_COLOR} roughness={0.6} metalness={0.05} clearcoat={0.2} clearcoatRoughness={0.6} />
     </mesh>
   );
 }
@@ -145,15 +146,26 @@ export default function ThreeBook({
     <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
       {/* Gl configuration for crisp colors */}
       <Canvas shadows camera={{ position: [0, 1.8, 8.5], fov: 42 }} gl={{ alpha: true, antialias: true }}>
-        <ambientLight intensity={0.55} />
+        {/* Softer warmer lighting for a more spiritual and premium atmosphere */}
+        <ambientLight intensity={0.6} color="#ffe8cc" />
         <directionalLight
-          position={[3, 8, -4]}
-          intensity={1.5}
+          position={[4, 7, -3]}
+          intensity={1.6}
+          color="#ffeedd"
           castShadow
           shadow-mapSize-width={2048}
           shadow-mapSize-height={2048}
+          shadow-bias={-0.0001}
         />
-        <Environment preset="city" />
+        <spotLight 
+          position={[-5, 5, 5]} 
+          angle={0.4} 
+          penumbra={1} 
+          intensity={1.2} 
+          color="#ffdcb3" 
+          castShadow 
+        />
+        <Environment preset="sunset" />
 
         <Float speed={2} rotationIntensity={0.15} floatIntensity={0.4}>
           <group rotation={[-Math.PI / 12, 0, 0]}>
@@ -162,7 +174,7 @@ export default function ThreeBook({
             {/* positioned precisely behind the folds */}
             <mesh position={[0, 0, -MAX_THICKNESS - 0.04]} receiveShadow castShadow>
                <cylinderGeometry args={[0.13, 0.13, PAGE_HEIGHT + 0.2, 32]} />
-               <meshStandardMaterial color={COVER_COLOR} roughness={0.8} />
+               <meshPhysicalMaterial color={COVER_COLOR} roughness={0.6} metalness={0.05} clearcoat={0.2} clearcoatRoughness={0.6} />
             </mesh>
             
             {/* Left and Right Green Hardcovers */}
@@ -202,7 +214,7 @@ export default function ThreeBook({
           </group>
         </Float>
 
-        <ContactShadows position={[0, -4.5, 0]} opacity={0.65} scale={25} blur={3.5} far={4} color="#000000" />
+        <ContactShadows position={[0, -4.5, 0]} opacity={0.5} scale={30} blur={4} far={4} color="#312a20" resolution={1024} />
         <OrbitControls enableZoom={true} enablePan={false} maxPolarAngle={Math.PI / 2 + 0.1} minPolarAngle={Math.PI / 3.5} enableDamping />
       </Canvas>
     </div>
