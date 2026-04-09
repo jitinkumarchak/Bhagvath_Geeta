@@ -49,6 +49,7 @@ function CoverPage() {
   return (
     <div
       style={{
+        fontSize: "40px",
         width: "100%",
         height: "100%",
         display: "flex",
@@ -57,7 +58,7 @@ function CoverPage() {
         justifyContent: "center",
         background:
           "linear-gradient(160deg, #1a0e02 0%, #0d0a00 40%, #1a0800 100%)",
-        padding: "2rem",
+        padding: "2em",
         textAlign: "center",
         position: "relative",
         overflow: "hidden",
@@ -91,8 +92,8 @@ function CoverPage() {
           left: "50%",
           transform: "translateX(-50%)",
           color: "rgba(229,235,131,0.4)",
-          fontSize: "1.2rem",
-          letterSpacing: "1rem",
+          fontSize: "1.2em",
+          letterSpacing: "1em",
         }}
       >
         ✦ ✦ ✦
@@ -100,8 +101,8 @@ function CoverPage() {
 
       <div
         style={{
-          fontSize: "4rem",
-          marginBottom: "1.2rem",
+          fontSize: "4em",
+          marginBottom: "1.2em",
           filter: "drop-shadow(0 0 20px rgba(229,235,131,0.5))",
         }}
       >
@@ -110,11 +111,11 @@ function CoverPage() {
       <h1
         style={{
           fontFamily: "'Cinzel', serif",
-          fontSize: "1.9rem",
+          fontSize: "1.9em",
           fontWeight: 700,
           color: "#f5c842",
           lineHeight: 1.3,
-          marginBottom: "0.75rem",
+          marginBottom: "0.75em",
           textShadow: "0 0 30px rgba(229,235,131,0.4)",
         }}
       >
@@ -123,9 +124,9 @@ function CoverPage() {
       <p
         style={{
           fontFamily: "'Tiro Devanagari Sanskrit', serif",
-          fontSize: "1.1rem",
+          fontSize: "1.1em",
           color: "rgba(229,235,131,0.7)",
-          marginBottom: "1.5rem",
+          marginBottom: "1.5em",
         }}
       >
         श्रीमद् भगवद्गीता
@@ -135,13 +136,13 @@ function CoverPage() {
           width: "60px",
           height: "1px",
           background: "linear-gradient(90deg,transparent,#f5c842,transparent)",
-          marginBottom: "1.2rem",
+          marginBottom: "1.2em",
         }}
       />
       <p
         style={{
           color: "rgba(229,235,131,0.5)",
-          fontSize: "0.8rem",
+          fontSize: "0.8em",
           letterSpacing: "0.15em",
           textTransform: "uppercase",
         }}
@@ -151,8 +152,8 @@ function CoverPage() {
       <p
         style={{
           color: "rgba(200,160,60,0.4)",
-          fontSize: "0.72rem",
-          marginTop: "0.5rem",
+          fontSize: "0.72em",
+          marginTop: "0.5em",
         }}
       >
         18 Chapters · 700 Verses
@@ -166,8 +167,8 @@ function CoverPage() {
           left: "50%",
           transform: "translateX(-50%)",
           color: "rgba(229,235,131,0.4)",
-          fontSize: "1.2rem",
-          letterSpacing: "1rem",
+          fontSize: "1.2em",
+          letterSpacing: "1em",
         }}
       >
         ✦ ✦ ✦
@@ -180,6 +181,7 @@ function BackCoverPage() {
   return (
     <div
       style={{
+        fontSize: "40px",
         width: "100%",
         height: "100%",
         display: "flex",
@@ -188,7 +190,7 @@ function BackCoverPage() {
         justifyContent: "center",
         background:
           "linear-gradient(160deg, #1a0e02 0%, #0d0a00 60%, #1a0800 100%)",
-        padding: "2rem",
+        padding: "2em",
         textAlign: "center",
         position: "relative",
       }}
@@ -201,12 +203,12 @@ function BackCoverPage() {
           borderRadius: "4px",
         }}
       />
-      <div style={{ fontSize: "2rem", marginBottom: "1rem" }}>🕉️</div>
+      <div style={{ fontSize: "2em", marginBottom: "1em" }}>🕉️</div>
       <p
         style={{
           fontFamily: "'Cinzel', serif",
           color: "rgba(229,235,131,0.6)",
-          fontSize: "0.85rem",
+          fontSize: "0.85em",
           letterSpacing: "0.1em",
         }}
       >
@@ -217,14 +219,14 @@ function BackCoverPage() {
           width: "40px",
           height: "1px",
           background: "rgba(229,235,131,0.3)",
-          margin: "1rem auto",
+          margin: "1em auto",
         }}
       />
       <p
         style={{
           fontFamily: "'Tiro Devanagari Sanskrit', serif",
           color: "rgba(229,235,131,0.45)",
-          fontSize: "1rem",
+          fontSize: "1em",
           lineHeight: 2,
         }}
       >
@@ -235,8 +237,8 @@ function BackCoverPage() {
       <p
         style={{
           color: "rgba(200,160,60,0.35)",
-          fontSize: "0.75rem",
-          marginTop: "1rem",
+          fontSize: "0.75em",
+          marginTop: "1em",
         }}
       >
         — 18.66
@@ -249,6 +251,7 @@ function ChapterTitlePage({ chapter }) {
   return (
     <div
       style={{
+        fontSize: "40px",
         width: "100%",
         height: "100%",
         display: "flex",
@@ -256,7 +259,7 @@ function ChapterTitlePage({ chapter }) {
         alignItems: "center",
         justifyContent: "center",
         background: "linear-gradient(180deg, #f9f0dc 0%, #fdf5e4 100%)",
-        padding: "2.5rem",
+        padding: "2.5em",
         textAlign: "center",
         position: "relative",
       }}
@@ -273,14 +276,14 @@ function ChapterTitlePage({ chapter }) {
       <span
         style={{
           display: "inline-block",
-          padding: "0.3rem 1rem",
+          padding: "0.3em 1em",
           border: "1px solid rgba(160,120,50,0.35)",
           borderRadius: "99px",
           color: "#8B6914",
-          fontSize: "0.7rem",
+          fontSize: "0.7em",
           fontFamily: "'Cinzel', serif",
           letterSpacing: "0.1em",
-          marginBottom: "1.5rem",
+          marginBottom: "1.5em",
         }}
       >
         CHAPTER {chapter.id}
@@ -289,9 +292,9 @@ function ChapterTitlePage({ chapter }) {
       <h2
         style={{
           fontFamily: "'Cinzel', serif",
-          fontSize: "1.35rem",
+          fontSize: "1.35em",
           color: "#3d2c0a",
-          marginBottom: "0.6rem",
+          marginBottom: "0.6em",
           lineHeight: 1.3,
         }}
       >
@@ -303,16 +306,16 @@ function ChapterTitlePage({ chapter }) {
           width: "50px",
           height: "1px",
           background: "rgba(160,120,50,0.4)",
-          margin: "1rem auto",
+          margin: "1em auto",
         }}
       />
 
       <p
         style={{
           fontFamily: "'Tiro Devanagari Sanskrit', serif",
-          fontSize: "1.1rem",
+          fontSize: "1.1em",
           color: "#8B6914",
-          marginBottom: "0.6rem",
+          marginBottom: "0.6em",
           lineHeight: 1.9,
         }}
       >
@@ -322,9 +325,9 @@ function ChapterTitlePage({ chapter }) {
       <p
         style={{
           color: "#6b5020",
-          fontSize: "0.85rem",
+          fontSize: "0.85em",
           fontStyle: "italic",
-          marginBottom: "1.5rem",
+          marginBottom: "1.5em",
         }}
       >
         {chapter.meaning}
@@ -335,9 +338,9 @@ function ChapterTitlePage({ chapter }) {
           background: "rgba(160,120,50,0.08)",
           border: "1px solid rgba(160,120,50,0.2)",
           borderRadius: "8px",
-          padding: "0.6rem 1.2rem",
+          padding: "0.6em 1.2em",
           color: "#8B6914",
-          fontSize: "0.75rem",
+          fontSize: "0.75em",
           fontFamily: "'Cinzel', serif",
         }}
       >
@@ -352,10 +355,11 @@ function VersePage({ page }) {
   return (
     <div
       style={{
+        fontSize: "40px",
         width: "100%",
         height: "100%",
         background: "linear-gradient(180deg, #fdf8ee 0%, #faf2e0 100%)",
-        padding: "1.6rem 1.8rem",
+        padding: "1.6em 1.8em",
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
@@ -368,8 +372,8 @@ function VersePage({ page }) {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "1rem",
-          paddingBottom: "0.6rem",
+          marginBottom: "1em",
+          paddingBottom: "0.6em",
           borderBottom: "1px solid rgba(160,120,50,0.2)",
           flexShrink: 0,
         }}
@@ -377,7 +381,7 @@ function VersePage({ page }) {
         <span
           style={{
             color: "#8B6914",
-            fontSize: "0.65rem",
+            fontSize: "0.65em",
             fontFamily: "'Cinzel', serif",
             letterSpacing: "0.08em",
           }}
@@ -388,8 +392,8 @@ function VersePage({ page }) {
           style={{
             background: "rgba(139,105,20,0.1)",
             color: "#8B6914",
-            fontSize: "0.65rem",
-            padding: "0.15rem 0.6rem",
+            fontSize: "0.65em",
+            padding: "0.15em 0.6em",
             borderRadius: "99px",
             fontFamily: "'Cinzel', serif",
           }}
@@ -401,18 +405,18 @@ function VersePage({ page }) {
       {/* Sanskrit */}
       <div
         style={{
-          padding: "0.9rem",
+          padding: "0.9em",
           background: "rgba(139,105,20,0.05)",
           borderRadius: "6px",
           border: "1px solid rgba(139,105,20,0.12)",
-          marginBottom: "0.9rem",
+          marginBottom: "0.9em",
           flexShrink: 0,
         }}
       >
         <p
           style={{
             fontFamily: "'Tiro Devanagari Sanskrit', serif",
-            fontSize: "0.85rem",
+            fontSize: "0.85em",
             color: "#5a3e0a",
             lineHeight: 2,
             textAlign: "center",
@@ -427,9 +431,9 @@ function VersePage({ page }) {
         style={{
           fontStyle: "italic",
           color: "#a07830",
-          fontSize: "0.7rem",
+          fontSize: "0.7em",
           lineHeight: 1.7,
-          marginBottom: "0.9rem",
+          marginBottom: "0.9em",
           textAlign: "center",
           flexShrink: 0,
         }}
@@ -442,7 +446,7 @@ function VersePage({ page }) {
           width: "30px",
           height: "1px",
           background: "rgba(160,120,50,0.3)",
-          margin: "0 auto 0.9rem",
+          margin: "0 auto 0.9em",
           flexShrink: 0,
         }}
       />
@@ -451,7 +455,7 @@ function VersePage({ page }) {
       <p
         style={{
           color: "#2d1f05",
-          fontSize: "0.82rem",
+          fontSize: "0.82em",
           lineHeight: 1.9,
           fontFamily: "'Georgia', serif",
           flex: 1,
@@ -465,16 +469,16 @@ function VersePage({ page }) {
       {verse.commentary && (
         <div
           style={{
-            marginTop: "0.9rem",
+            marginTop: "0.9em",
             flexShrink: 0,
-            paddingTop: "0.7rem",
+            paddingTop: "0.7em",
             borderTop: "1px solid rgba(160,120,50,0.15)",
           }}
         >
           <p
             style={{
               color: "#7a5c1e",
-              fontSize: "0.68rem",
+              fontSize: "0.68em",
               lineHeight: 1.7,
               fontStyle: "italic",
             }}
@@ -489,9 +493,9 @@ function VersePage({ page }) {
       <div
         style={{
           display: "flex",
-          gap: "0.3rem",
+          gap: "0.3em",
           flexWrap: "wrap",
-          marginTop: "0.7rem",
+          marginTop: "0.7em",
           flexShrink: 0,
         }}
       >
@@ -499,8 +503,8 @@ function VersePage({ page }) {
           <span
             key={t}
             style={{
-              fontSize: "0.6rem",
-              padding: "0.15rem 0.5rem",
+              fontSize: "0.6em",
+              padding: "0.15em 0.5em",
               border: "1px solid rgba(139,105,20,0.25)",
               borderRadius: "99px",
               color: "#8B6914",
@@ -531,6 +535,7 @@ function PlaceholderPage({ page }) {
   return (
     <div
       style={{
+        fontSize: "40px",
         width: "100%",
         height: "100%",
         background: "linear-gradient(180deg, #fdf8ee 0%, #faf2e0 100%)",
@@ -538,7 +543,7 @@ function PlaceholderPage({ page }) {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "2rem",
+        padding: "2em",
         textAlign: "center",
       }}
     >
@@ -546,16 +551,16 @@ function PlaceholderPage({ page }) {
         style={{
           color: "#8B6914",
           fontFamily: "'Tiro Devanagari Sanskrit', serif",
-          fontSize: "1.5rem",
-          marginBottom: "1rem",
+          fontSize: "1.5em",
+          marginBottom: "1em",
         }}
       >
         ॐ
       </p>
-      <p style={{ color: "#a07830", fontSize: "0.8rem", fontStyle: "italic" }}>
+      <p style={{ color: "#a07830", fontSize: "0.8em", fontStyle: "italic" }}>
         Chapter {page.chapter} — {page.chapterObj.name}
       </p>
-      <p style={{ color: "#b09060", fontSize: "0.72rem", marginTop: "0.5rem" }}>
+      <p style={{ color: "#b09060", fontSize: "0.72em", marginTop: "0.5em" }}>
         Full verses coming soon
       </p>
     </div>
@@ -566,6 +571,7 @@ function BlankPage() {
   return (
     <div
       style={{
+        fontSize: "40px",
         width: "100%",
         height: "100%",
         background: "linear-gradient(180deg, #fdf8ee 0%, #faf2e0 100%)",
@@ -574,7 +580,7 @@ function BlankPage() {
         justifyContent: "center",
       }}
     >
-      <span style={{ color: "rgba(139,105,20,0.15)", fontSize: "2rem" }}>
+      <span style={{ color: "rgba(139,105,20,0.15)", fontSize: "2em" }}>
         🕉️
       </span>
     </div>
