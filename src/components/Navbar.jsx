@@ -36,7 +36,7 @@ export default function Navbar() {
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
           borderBottom: scrolled
-            ? "1px solid rgba(245,200,66,0.15)"
+            ? "1px solid rgba(229,235,131,0.15)"
             : "1px solid transparent",
           transition: "all 0.3s ease",
           display: "flex",
@@ -108,7 +108,7 @@ export default function Navbar() {
                   onMouseEnter={(e) => {
                     if (!active)
                       e.currentTarget.style.background =
-                        "rgba(245,200,66,0.08)";
+                        "rgba(229,235,131,0.08)";
                   }}
                   onMouseLeave={(e) => {
                     if (!active)
@@ -174,7 +174,7 @@ export default function Navbar() {
                   fontSize: "1rem",
                   fontWeight: active ? 600 : 400,
                   color: active ? "var(--color-gold)" : "var(--color-text)",
-                  background: active ? "rgba(245,200,66,0.08)" : "transparent",
+                  background: active ? "rgba(229,235,131,0.08)" : "transparent",
                   display: "flex",
                   alignItems: "center",
                   gap: "0.6rem",

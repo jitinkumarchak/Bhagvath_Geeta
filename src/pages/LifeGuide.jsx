@@ -39,7 +39,7 @@ export default function LifeGuide() {
                 ? "1px solid var(--color-gold)"
                 : "1px solid var(--color-border)",
               background: selected?.key === em.key
-                ? "rgba(245,200,66,0.12)"
+                ? "rgba(229,235,131,0.12)"
                 : "var(--color-surface2)",
               color: selected?.key === em.key ? "var(--color-cream)" : "var(--color-text)",
               cursor: "pointer",

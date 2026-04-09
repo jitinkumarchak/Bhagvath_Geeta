@@ -93,15 +93,15 @@ export default function ChapterDetail() {
                   padding: "0.6rem",
                   borderRadius: "var(--radius-sm)",
                   border: hasData ? "1px solid var(--color-border-hover)" : "1px solid var(--color-border)",
-                  background: hasData ? "rgba(245,200,66,0.07)" : "var(--color-surface2)",
+                  background: hasData ? "rgba(229,235,131,0.07)" : "var(--color-surface2)",
                   color: hasData ? "var(--color-gold)" : "var(--color-muted)",
                   cursor: hasData ? "pointer" : "default",
                   fontWeight: hasData ? 600 : 400,
                   fontSize: "0.85rem",
                   transition: "all 0.2s",
                 }}
-                onMouseEnter={e => hasData && (e.currentTarget.style.background = "rgba(245,200,66,0.15)")}
-                onMouseLeave={e => hasData && (e.currentTarget.style.background = "rgba(245,200,66,0.07)")}
+                onMouseEnter={e => hasData && (e.currentTarget.style.background = "rgba(229,235,131,0.15)")}
+                onMouseLeave={e => hasData && (e.currentTarget.style.background = "rgba(229,235,131,0.07)")}
               >
                 {n}
               </button>

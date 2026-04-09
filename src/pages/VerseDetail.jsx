@@ -104,7 +104,7 @@ Answer questions about this verse with wisdom, warmth, and practical insight. Co
           {/* Subtle ambient glow behind sanskrit */}
           <div className="anim-pulse" style={{
             position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
-            width: "300px", height: "150px", background: "radial-gradient(ellipse, rgba(255,123,28,0.12) 0%, transparent 60%)",
+            width: "300px", height: "150px", background: "radial-gradient(ellipse, rgba(249,178,152,0.12) 0%, transparent 60%)",
             filter: "blur(40px)", pointerEvents: "none", zIndex: 0
           }} />
           <p className="sanskrit" style={{ fontSize: "1.3rem", lineHeight: 2.2, position: "relative", zIndex: 1, textShadow: "0 2px 10px rgba(0,0,0,0.5)" }}>
@@ -137,7 +137,7 @@ Answer questions about this verse with wisdom, warmth, and practical insight. Co
         {verse.commentary && (
           <div style={{
             padding: "1.25rem 1.5rem",
-            background: "rgba(245,200,66,0.05)",
+            background: "rgba(229,235,131,0.05)",
             borderRadius: "var(--radius-md)",
             borderLeft: "3px solid var(--color-gold-dim)",
             marginBottom: "2rem",

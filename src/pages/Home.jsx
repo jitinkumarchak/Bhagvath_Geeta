@@ -36,14 +36,14 @@ export default function Home() {
         <div className="anim-float" style={{
           position: "absolute", width: "80vw", height: "80vw", maxWidth: "800px", maxHeight: "800px",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(255,123,28,0.06) 0%, transparent 60%)",
+          background: "radial-gradient(circle, rgba(249,178,152,0.06) 0%, transparent 60%)",
           top: "-10%", left: "10%", filter: "blur(80px)",
           pointerEvents: "none", zIndex: 0
         }} />
         <div className="anim-float" style={{
           position: "absolute", width: "60vw", height: "60vw", maxWidth: "600px", maxHeight: "600px",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(245,200,66,0.05) 0%, transparent 60%)",
+          background: "radial-gradient(circle, rgba(229,235,131,0.05) 0%, transparent 60%)",
           bottom: "10%", right: "5%", filter: "blur(60px)",
           animationDelay: "-3s",
           pointerEvents: "none", zIndex: 0
@@ -73,7 +73,7 @@ export default function Home() {
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(40px)",
             transition: "all 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s",
-            textShadow: "0 0 40px rgba(245,200,66,0.15)",
+            textShadow: "0 0 40px rgba(229,235,131,0.15)",
             zIndex: 1
           }}
         >
@@ -196,7 +196,7 @@ export default function Home() {
       <section style={{
         textAlign: "center", padding: "5rem 2rem",
         borderTop: "1px solid var(--color-border)",
-        background: "linear-gradient(180deg, transparent 0%, rgba(245,200,66,0.03) 100%)",
+        background: "linear-gradient(180deg, transparent 0%, rgba(229,235,131,0.03) 100%)",
       }}>
         <p style={{
           fontFamily: "var(--font-sanskrit)", fontSize: "1.5rem",

@@ -15,10 +15,29 @@ const PAGE_WIDTH      = 4.1;
 const PAGE_HEIGHT     = 5.6;
 const SPINE_GAP       = 0.08;
 const MAX_THICKNESS   = 0.25;
-const CONTENT_SCALE   = 1.35;
-const CSS_WIDTH       = Math.round(410 / CONTENT_SCALE);
-const CSS_HEIGHT      = Math.round(560 / CONTENT_SCALE);
-const HTML_SCALE      = PAGE_WIDTH / CSS_WIDTH;
+
+// ── HTML portal sizing ───────────────────────────────────────────────────────
+// The <Html transform> component in @react-three/drei renders a DOM element
+// at 1px = 1 three.js world unit by default, then applies `scale` on top.
+//
+// Strategy: define CSS dimensions in pixels that *feel* like a real page at
+// screen resolution, then calculate the scale factor to shrink that pixel
+// canvas back down to match the 3-D page mesh dimensions exactly.
+//
+// CSS_WIDTH / CSS_HEIGHT  — the "virtual canvas" size in px the HTML is
+//   laid out against. Larger = crisper text; must stay proportional to
+//   PAGE_WIDTH / PAGE_HEIGHT so nothing is cropped.
+//
+// HTML_SCALE = PAGE_WIDTH / CSS_WIDTH
+//   This tells drei "shrink my N-px-wide canvas to PAGE_WIDTH world units".
+//   At 1024px wide the text reads at ~18px effective, which is comfortable.
+const CSS_WIDTH       = 1024;
+const CSS_HEIGHT      = Math.round(1024 * (PAGE_HEIGHT / PAGE_WIDTH)); // ≈1398px
+const HTML_SCALE      = PAGE_WIDTH / CSS_WIDTH;                        // ≈0.004
+
+// Export these so parent components that pass renderPageFunc can size their
+// page content correctly — all content must be laid out at CSS_WIDTH × CSS_HEIGHT.
+export { CSS_WIDTH, CSS_HEIGHT };
 
 // ─── Sacred Palette ──────────────────────────────────────────────────────────
 // Inspired by aged temple manuscripts: deep sandalwood, ivory parchment, antique gold
@@ -30,37 +49,39 @@ const SPINE_COLOR      = '#1E1008'; // darkest umber for the spine fold
 
 
 // ─── Page content wrapper with sacred styling ────────────────────────────────
-// Applied inside the Html portal; keeps the 3-D page visually coherent.
+// CSS_WIDTH is 1024px — all font sizes / padding scaled up ~2.5×.
+// Html portal shrinks everything back via HTML_SCALE so it fits the 3D mesh.
 const pageStyle = {
-  width: CSS_WIDTH,
+  width:  CSS_WIDTH,
   height: CSS_HEIGHT,
   background: 'transparent',
   userSelect: 'none',
   fontFamily: '"Crimson Text", Georgia, serif',
   color: '#2C1A0A',
-  padding: '22px 18px 18px',
+  padding: '56px 48px 44px',
   display: 'flex',
   flexDirection: 'column',
   position: 'relative',
   overflow: 'hidden',
+  boxSizing: 'border-box',
 };
 
-// Decorative corner flourish (pure CSS, no image dependency)
+// Decorative corner flourish — sizes scaled for 1024px canvas
 function CornerMark({ corner }) {
   const pos = {
-    topLeft:     { top: 6, left: 6 },
-    topRight:    { top: 6, right: 6 },
-    bottomLeft:  { bottom: 6, left: 6 },
-    bottomRight: { bottom: 6, right: 6 },
+    topLeft:     { top: 18, left: 18 },
+    topRight:    { top: 18, right: 18 },
+    bottomLeft:  { bottom: 18, left: 18 },
+    bottomRight: { bottom: 18, right: 18 },
   }[corner];
   return (
     <div style={{
       position: 'absolute', ...pos,
-      width: 14, height: 14,
-      borderTop:  corner.startsWith('top')    ? '1px solid rgba(139,105,20,0.45)' : 'none',
-      borderBottom: corner.startsWith('bottom') ? '1px solid rgba(139,105,20,0.45)' : 'none',
-      borderLeft:  corner.endsWith('Left')    ? '1px solid rgba(139,105,20,0.45)' : 'none',
-      borderRight: corner.endsWith('Right')   ? '1px solid rgba(139,105,20,0.45)' : 'none',
+      width: 32, height: 32,
+      borderTop:    corner.startsWith('top')    ? '2px solid rgba(139,105,20,0.45)' : 'none',
+      borderBottom: corner.startsWith('bottom') ? '2px solid rgba(139,105,20,0.45)' : 'none',
+      borderLeft:   corner.endsWith('Left')     ? '2px solid rgba(139,105,20,0.45)' : 'none',
+      borderRight:  corner.endsWith('Right')    ? '2px solid rgba(139,105,20,0.45)' : 'none',
     }} />
   );
 }
@@ -69,15 +90,14 @@ function CornerMark({ corner }) {
 function PageBorder() {
   return (
     <div style={{
-      position: 'absolute', inset: 10,
-      border: '0.5px solid rgba(139,105,20,0.18)',
+      position: 'absolute', inset: 26,
+      border: '1px solid rgba(139,105,20,0.18)',
       pointerEvents: 'none',
     }} />
   );
 }
 
 // ─── Default page renderer — callers override via renderPageFunc ─────────────
-// This is a tasteful fallback so the component works standalone.
 function DefaultPageContent({ page, index }) {
   if (!page) return (
     <div style={pageStyle}>
@@ -93,98 +113,90 @@ function DefaultPageContent({ page, index }) {
       <PageBorder />
       {['topLeft','topRight','bottomLeft','bottomRight'].map(c => <CornerMark key={c} corner={c} />)}
 
-      {/* Om glyph */}
       <div style={{
-        fontSize: 36, color: '#8B6914', marginBottom: 14,
+        fontSize: 92, color: '#8B6914', marginBottom: 32,
         fontFamily: '"Noto Serif Devanagari", serif',
-        textShadow: '0 1px 6px rgba(139,105,20,0.25)',
+        textShadow: '0 2px 16px rgba(139,105,20,0.25)',
+        lineHeight: 1,
       }}>ॐ</div>
 
-      {/* Title */}
       <div style={{
-        fontFamily: '"Cinzel Decorative", serif',
-        fontSize: 15, fontWeight: 700,
+        fontFamily: '"Cinzel Decorative", "Cinzel", serif',
+        fontSize: 38, fontWeight: 700,
         color: '#1E0F04', letterSpacing: '0.18em',
         textAlign: 'center', lineHeight: 1.5,
-        marginBottom: 8,
+        marginBottom: 20,
       }}>BHAGAVAD<br/>GITA</div>
 
-      {/* Subtitle */}
       <div style={{
-        fontSize: 10, letterSpacing: '0.22em',
+        fontSize: 24, letterSpacing: '0.22em',
         color: 'rgba(139,105,20,0.7)', textAlign: 'center',
         fontFamily: '"Cinzel", serif',
-        marginBottom: 20,
+        marginBottom: 48,
       }}>श्रीमद्भगवद्गीता</div>
 
-      {/* Divider */}
       <div style={{
-        width: 48, height: 1,
+        width: 120, height: 2,
         background: 'linear-gradient(to right, transparent, rgba(139,105,20,0.5), transparent)',
-        marginBottom: 20,
+        marginBottom: 48,
       }} />
 
       <div style={{
-        fontSize: 9, letterSpacing: '0.18em',
+        fontSize: 20, letterSpacing: '0.22em',
         color: 'rgba(44,26,10,0.45)', textAlign: 'center',
         fontFamily: '"Cinzel", serif',
       }}>SONG OF THE DIVINE</div>
     </div>
   );
 
-  // Regular verse page
   return (
     <div style={pageStyle}>
       <PageBorder />
       {['topLeft','topRight','bottomLeft','bottomRight'].map(c => <CornerMark key={c} corner={c} />)}
 
-      {/* Chapter / verse number */}
       <div style={{
         fontFamily: '"Cinzel", serif',
-        fontSize: 8, letterSpacing: '0.16em',
+        fontSize: 20, letterSpacing: '0.16em',
         color: 'rgba(139,105,20,0.65)',
-        marginBottom: 10,
+        marginBottom: 28,
         textAlign: index % 2 === 0 ? 'left' : 'right',
       }}>
         {page.chapter || 'Chapter I'} · {page.verse || `Verse ${index}`}
       </div>
 
-      {/* Sanskrit block */}
       {page.sanskrit && (
         <div style={{
-          borderLeft: '2px solid rgba(139,105,20,0.4)',
-          paddingLeft: 10,
-          marginBottom: 12,
-          marginLeft: 2,
+          borderLeft: '5px solid rgba(139,105,20,0.4)',
+          paddingLeft: 28,
+          marginBottom: 32,
+          marginLeft: 4,
         }}>
           <div style={{
             fontFamily: '"Noto Serif Devanagari", "Lohit Devanagari", serif',
-            fontSize: 13, lineHeight: 1.9,
+            fontSize: 32, lineHeight: 1.9,
             color: '#3D1F06',
             fontStyle: 'italic',
           }}>{page.sanskrit}</div>
           {page.transliteration && (
             <div style={{
-              fontSize: 9, lineHeight: 1.6,
+              fontSize: 22, lineHeight: 1.6,
               color: 'rgba(139,105,20,0.7)',
-              marginTop: 4, fontStyle: 'italic',
+              marginTop: 10, fontStyle: 'italic',
               fontFamily: '"Crimson Text", serif',
             }}>{page.transliteration}</div>
           )}
         </div>
       )}
 
-      {/* Divider dot */}
       <div style={{
-        textAlign: 'center', fontSize: 10,
+        textAlign: 'center', fontSize: 24,
         color: 'rgba(139,105,20,0.35)',
-        marginBottom: 10, letterSpacing: 8,
+        marginBottom: 28, letterSpacing: 20,
       }}>· · ·</div>
 
-      {/* Translation */}
       {page.translation && (
         <div style={{
-          fontSize: 11.5, lineHeight: 1.85,
+          fontSize: 28, lineHeight: 1.85,
           color: '#2C1A0A',
           fontFamily: '"Crimson Text", serif',
           fontWeight: 400,
@@ -192,13 +204,12 @@ function DefaultPageContent({ page, index }) {
         }}>{page.translation}</div>
       )}
 
-      {/* Page number */}
       <div style={{
         textAlign: 'center',
         fontFamily: '"Cinzel", serif',
-        fontSize: 8,
+        fontSize: 20,
         color: 'rgba(139,105,20,0.4)',
-        marginTop: 8,
+        marginTop: 20,
         letterSpacing: '0.1em',
       }}>— {index} —</div>
     </div>

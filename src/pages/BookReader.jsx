@@ -68,7 +68,7 @@ function CoverPage() {
         style={{
           position: "absolute",
           inset: "12px",
-          border: "1px solid rgba(245,200,66,0.3)",
+          border: "1px solid rgba(229,235,131,0.3)",
           borderRadius: "4px",
           pointerEvents: "none",
         }}
@@ -77,7 +77,7 @@ function CoverPage() {
         style={{
           position: "absolute",
           inset: "18px",
-          border: "1px solid rgba(245,200,66,0.12)",
+          border: "1px solid rgba(229,235,131,0.12)",
           borderRadius: "2px",
           pointerEvents: "none",
         }}
@@ -90,7 +90,7 @@ function CoverPage() {
           top: "30px",
           left: "50%",
           transform: "translateX(-50%)",
-          color: "rgba(245,200,66,0.4)",
+          color: "rgba(229,235,131,0.4)",
           fontSize: "1.2rem",
           letterSpacing: "1rem",
         }}
@@ -102,7 +102,7 @@ function CoverPage() {
         style={{
           fontSize: "4rem",
           marginBottom: "1.2rem",
-          filter: "drop-shadow(0 0 20px rgba(245,200,66,0.5))",
+          filter: "drop-shadow(0 0 20px rgba(229,235,131,0.5))",
         }}
       >
         🕉️
@@ -115,7 +115,7 @@ function CoverPage() {
           color: "#f5c842",
           lineHeight: 1.3,
           marginBottom: "0.75rem",
-          textShadow: "0 0 30px rgba(245,200,66,0.4)",
+          textShadow: "0 0 30px rgba(229,235,131,0.4)",
         }}
       >
         Bhagavad Gita
@@ -124,7 +124,7 @@ function CoverPage() {
         style={{
           fontFamily: "'Tiro Devanagari Sanskrit', serif",
           fontSize: "1.1rem",
-          color: "rgba(245,200,66,0.7)",
+          color: "rgba(229,235,131,0.7)",
           marginBottom: "1.5rem",
         }}
       >
@@ -140,7 +140,7 @@ function CoverPage() {
       />
       <p
         style={{
-          color: "rgba(245,200,66,0.5)",
+          color: "rgba(229,235,131,0.5)",
           fontSize: "0.8rem",
           letterSpacing: "0.15em",
           textTransform: "uppercase",
@@ -165,7 +165,7 @@ function CoverPage() {
           bottom: "30px",
           left: "50%",
           transform: "translateX(-50%)",
-          color: "rgba(245,200,66,0.4)",
+          color: "rgba(229,235,131,0.4)",
           fontSize: "1.2rem",
           letterSpacing: "1rem",
         }}
@@ -197,7 +197,7 @@ function BackCoverPage() {
         style={{
           position: "absolute",
           inset: "12px",
-          border: "1px solid rgba(245,200,66,0.25)",
+          border: "1px solid rgba(229,235,131,0.25)",
           borderRadius: "4px",
         }}
       />
@@ -205,7 +205,7 @@ function BackCoverPage() {
       <p
         style={{
           fontFamily: "'Cinzel', serif",
-          color: "rgba(245,200,66,0.6)",
+          color: "rgba(229,235,131,0.6)",
           fontSize: "0.85rem",
           letterSpacing: "0.1em",
         }}
@@ -216,14 +216,14 @@ function BackCoverPage() {
         style={{
           width: "40px",
           height: "1px",
-          background: "rgba(245,200,66,0.3)",
+          background: "rgba(229,235,131,0.3)",
           margin: "1rem auto",
         }}
       />
       <p
         style={{
           fontFamily: "'Tiro Devanagari Sanskrit', serif",
-          color: "rgba(245,200,66,0.45)",
+          color: "rgba(229,235,131,0.45)",
           fontSize: "1rem",
           lineHeight: 2,
         }}
@@ -687,7 +687,7 @@ export default function BookReader() {
           left: "1.5rem",
           background: "rgba(10,10,15,0.8)",
           backdropFilter: "blur(10px)",
-          border: "1px solid rgba(245,200,66,0.2)",
+          border: "1px solid rgba(229,235,131,0.2)",
           color: "var(--color-gold)",
           padding: "0.4rem 1rem",
           borderRadius: "99px",
@@ -716,7 +716,7 @@ export default function BookReader() {
           style={{
             background: "rgba(10,10,15,0.85)",
             backdropFilter: "blur(10px)",
-            border: "1px solid rgba(245,200,66,0.2)",
+            border: "1px solid rgba(229,235,131,0.2)",
             color: "var(--color-gold)",
             padding: "0.4rem 0.8rem",
             borderRadius: "99px",
@@ -751,7 +751,7 @@ export default function BookReader() {
           transform: "translateX(-50%)",
           background: "rgba(10,10,15,0.8)",
           backdropFilter: "blur(10px)",
-          border: "1px solid rgba(245,200,66,0.15)",
+          border: "1px solid rgba(229,235,131,0.15)",
           color: "var(--color-muted)",
           padding: "0.4rem 1.2rem",
           borderRadius: "99px",
@@ -770,7 +770,7 @@ export default function BookReader() {
             / {TOTAL_PAGES}
           </span>
         </span>
-        <span style={{ color: "rgba(245,200,66,0.3)" }}>|</span>
+        <span style={{ color: "rgba(229,235,131,0.3)" }}>|</span>
         <span style={{ fontSize: "0.7rem" }}>← → to flip</span>
       </div>
 
@@ -802,11 +802,11 @@ export default function BookReader() {
             background:
               spread <= 0 || animating
                 ? "rgba(30,20,5,0.4)"
-                : "rgba(245,200,66,0.12)",
-            border: "1px solid rgba(245,200,66,0.3)",
+                : "rgba(229,235,131,0.12)",
+            border: "1px solid rgba(229,235,131,0.3)",
             color:
               spread <= 0 || animating
-                ? "rgba(245,200,66,0.2)"
+                ? "rgba(229,235,131,0.2)"
                 : "var(--color-gold)",
             cursor: spread <= 0 || animating ? "not-allowed" : "pointer",
             fontSize: "1.3rem",
@@ -817,11 +817,11 @@ export default function BookReader() {
           }}
           onMouseEnter={(e) => {
             if (spread > 0 && !animating)
-              e.currentTarget.style.background = "rgba(245,200,66,0.2)";
+              e.currentTarget.style.background = "rgba(229,235,131,0.2)";
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background =
-              spread <= 0 ? "rgba(30,20,5,0.4)" : "rgba(245,200,66,0.12)";
+              spread <= 0 ? "rgba(30,20,5,0.4)" : "rgba(229,235,131,0.12)";
           }}
           aria-label="Previous page"
         >
@@ -844,11 +844,11 @@ export default function BookReader() {
             background:
               spread >= totalSpreads - 1 || animating
                 ? "rgba(30,20,5,0.4)"
-                : "rgba(245,200,66,0.12)",
-            border: "1px solid rgba(245,200,66,0.3)",
+                : "rgba(229,235,131,0.12)",
+            border: "1px solid rgba(229,235,131,0.3)",
             color:
               spread >= totalSpreads - 1 || animating
-                ? "rgba(245,200,66,0.2)"
+                ? "rgba(229,235,131,0.2)"
                 : "var(--color-gold)",
             cursor:
               spread >= totalSpreads - 1 || animating
@@ -862,13 +862,13 @@ export default function BookReader() {
           }}
           onMouseEnter={(e) => {
             if (spread < totalSpreads - 1 && !animating)
-              e.currentTarget.style.background = "rgba(245,200,66,0.2)";
+              e.currentTarget.style.background = "rgba(229,235,131,0.2)";
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background =
               spread >= totalSpreads - 1
                 ? "rgba(30,20,5,0.4)"
-                : "rgba(245,200,66,0.12)";
+                : "rgba(229,235,131,0.12)";
           }}
           aria-label="Next page"
         >

@@ -50,7 +50,7 @@ export default function Daily() {
           marginBottom: "2rem",
           textAlign: "center",
           background:
-            "linear-gradient(145deg, rgba(245,200,66,0.08) 0%, rgba(255,123,28,0.05) 100%)",
+            "linear-gradient(145deg, rgba(229,235,131,0.08) 0%, rgba(249,178,152,0.05) 100%)",
           animation: "fadeInUp 0.5s ease 0.1s backwards",
         }}
       >
