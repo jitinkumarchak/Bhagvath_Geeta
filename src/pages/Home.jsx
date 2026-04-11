@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getDailyVerse, CHAPTERS } from "../data/gita";
+import { getDailyVerse } from "../data/gita";
 import VerseCard from "../components/VerseCard";
 
 const FEATURES = [
@@ -130,7 +130,7 @@ export default function Home() {
         <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "2rem" }}>
           <span style={{ fontSize: "2rem" }}>☀️</span>
           <div>
-            <h2 style={{ fontSize: "1.6rem", marginBottom: "0.3rem" }}>Today's Wisdom</h2>
+            <h2 style={{ fontSize: "1.6rem", marginBottom: "0.3rem" }}>Today&apos;s Wisdom</h2>
             <p style={{ color: "var(--color-muted)", fontSize: "0.9rem" }}>
               {new Date().toLocaleDateString("en-IN", { weekday: "long", month: "long", day: "numeric" })}
             </p>
@@ -205,7 +205,7 @@ export default function Home() {
           योगः कर्मसु कौशलम्
         </p>
         <p style={{ color: "var(--color-muted)", marginBottom: "2rem" }}>
-          "Yoga is the art of action perfected." — Bhagavad Gita 2.50
+          &quot;Yoga is the art of action perfected.&quot; — Bhagavad Gita 2.50
         </p>
         <button className="btn-primary" onClick={() => navigate("/chapters")}>
           Begin Your Journey →
