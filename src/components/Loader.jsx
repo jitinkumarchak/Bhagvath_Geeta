@@ -2,34 +2,15 @@ import React from "react";
 
 export default function Loader({ text = "Loading wisdom..." }) {
   return (
-    <div style={{
-      display: "flex", flexDirection: "column",
-      alignItems: "center", justifyContent: "center",
-      gap: "1.5rem", padding: "4rem 2rem",
-    }}>
-      {/* Om symbol spinning */}
-      <div style={{ position: "relative", width: "64px", height: "64px" }}>
-        <div style={{
-          position: "absolute", inset: 0,
-          borderRadius: "50%",
-          border: "2px solid transparent",
-          borderTopColor: "var(--color-gold)",
-          borderRightColor: "var(--color-saffron)",
-          animation: "spin-slow 1.2s linear infinite",
-        }} />
-        <div style={{
-          position: "absolute", inset: "8px",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: "1.8rem",
-          background: "var(--grad-gold)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundClip: "text",
-        }}>
+    <div className="flex flex-col items-center justify-center gap-5 py-16 px-8">
+      {/* Om symbol with gentle pulse */}
+      <div className="relative w-14 h-14">
+        <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-[#B8860B]/40 border-r-[#D4A843]/30 animate-[spin-slow_1.5s_linear_infinite]" />
+        <div className="absolute inset-2 flex items-center justify-center text-2xl text-[#B8860B]/70">
           ॐ
         </div>
       </div>
-      <p style={{ color: "var(--color-muted)", fontSize: "0.9rem", letterSpacing: "0.05em" }}>
+      <p className="text-[#8A8580] text-sm tracking-wide">
         {text}
       </p>
     </div>
