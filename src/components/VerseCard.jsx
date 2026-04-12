@@ -1,14 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "../App";
 
-/*
-  VerseCard — Minimalist, calm, soothing design
-  ─────────────────────────────────────────────
-  Warm white card · soft borders · Cormorant headings
-  Manrope body · Tiro Devanagari Sanskrit · gentle expand
-*/
-
-// Animated height wrapper
+/* Animated height wrapper */
 function ExpandSection({ open, children }) {
   const ref = useRef(null);
   const [height, setHeight] = useState(0);
@@ -19,11 +13,8 @@ function ExpandSection({ open, children }) {
   }, [open]);
 
   return (
-    <div
-      className="overflow-hidden transition-[height] duration-300 ease-in-out"
-      style={{ height }}
-    >
-      <div ref={ref} className="flex flex-col gap-3 pt-0.5">
+    <div style={{ overflow: "hidden", height, transition: "height 0.35s cubic-bezier(0.22,0.61,0.36,1)" }}>
+      <div ref={ref} style={{ display: "flex", flexDirection: "column", gap: "10px", paddingTop: open ? "2px" : 0 }}>
         {children}
       </div>
     </div>
@@ -32,66 +23,119 @@ function ExpandSection({ open, children }) {
 
 export default function VerseCard({ verse, compact = false, showAsk = true }) {
   const navigate = useNavigate();
+  const { dark } = useTheme();
   const [expanded, setExpanded] = useState(false);
+  const [hovered, setHovered] = useState(false);
 
   if (!verse) return null;
 
   const topics = (verse.topics || []).slice(0, 3);
 
+  const c = {
+    bg: dark ? "#1C1A17" : "#FFFFFF",
+    bgHover: dark ? "#252320" : "#FAF7F3",
+    border: dark ? "#2E2B27" : "#DDD7CE",
+    borderHover: dark ? "#3D3830" : "#C9C1B5",
+    gold: dark ? "#C49A3C" : "#A07828",
+    goldSoft: dark ? "rgba(196,154,60,0.1)" : "rgba(160,120,40,0.08)",
+    goldSofter: dark ? "rgba(196,154,60,0.06)" : "rgba(160,120,40,0.04)",
+    text: dark ? "#E8E0D4" : "#2A2520",
+    textMuted: dark ? "#6A6055" : "#A09888",
+    textSecondary: dark ? "#9A9080" : "#7A7068",
+    sanskrit: dark ? "#D4B878" : "#5C4020",
+    sanskritBg: dark ? "rgba(196,154,60,0.06)" : "rgba(160,120,40,0.04)",
+    tagBg: dark ? "rgba(196,154,60,0.1)" : "rgba(160,120,40,0.06)",
+    tagBorder: dark ? "rgba(196,154,60,0.18)" : "rgba(160,120,40,0.12)",
+  };
+
   return (
     <article
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       onClick={() => setExpanded((p) => !p)}
-      className={`
-        relative bg-white border border-[#E8E4DF] rounded-xl
-        flex flex-col cursor-pointer overflow-hidden
-        transition-all duration-300 ease-in-out
-        hover:border-[#D4C9BC] hover:shadow-[0_4px_20px_rgba(0,0,0,0.04)]
-        ${compact ? "p-4" : "p-5 sm:p-6"}
-      `}
-      style={{ animation: "fadeInUp 0.4s ease both" }}
+      style={{
+        position: "relative",
+        padding: compact ? "16px 18px" : "20px 24px",
+        background: hovered ? c.bgHover : c.bg,
+        border: `1px solid ${hovered ? c.borderHover : c.border}`,
+        borderRadius: "14px",
+        display: "flex",
+        flexDirection: "column",
+        gap: "12px",
+        cursor: "pointer",
+        overflow: "hidden",
+        transition: "all 0.3s cubic-bezier(0.22,0.61,0.36,1)",
+        transform: hovered ? "translateY(-2px)" : "translateY(0)",
+        boxShadow: hovered
+          ? dark ? "0 8px 24px rgba(0,0,0,0.4)" : "0 6px 20px rgba(0,0,0,0.06)"
+          : dark ? "0 2px 8px rgba(0,0,0,0.2)" : "0 1px 4px rgba(0,0,0,0.03)",
+        animation: "fadeInUp 0.5s cubic-bezier(0.22,0.61,0.36,1) forwards",
+        opacity: 0,
+      }}
     >
-      {/* Top row: verse label · topics · chevron */}
-      <div className="flex items-center gap-2 flex-wrap mb-3">
-        <span className="font-['Cormorant_Garamond',serif] text-xs tracking-[0.15em] uppercase text-[#B8860B] font-semibold">
+      {/* Top row */}
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+        <span style={{
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: "0.7rem",
+          letterSpacing: "0.15em",
+          textTransform: "uppercase",
+          color: c.gold,
+          fontWeight: 600,
+        }}>
           {verse.chapter}.{verse.verse}
         </span>
 
-        <div className="w-px h-3 bg-[#E8E4DF]" />
+        <div style={{ width: "1px", height: "12px", background: c.border }} />
 
         {topics.map((t) => (
-          <span
-            key={t}
-            className="text-[0.65rem] tracking-wider uppercase text-[#B8860B]/70 bg-[#B8860B]/6 border border-[#B8860B]/12 rounded-full px-2 py-0.5"
-          >
+          <span key={t} style={{
+            fontSize: "0.6rem",
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            color: c.gold,
+            background: c.tagBg,
+            border: `1px solid ${c.tagBorder}`,
+            borderRadius: "20px",
+            padding: "2px 10px",
+            opacity: 0.8,
+          }}>
             {t}
           </span>
         ))}
 
-        <div className="ml-auto">
+        <div style={{ marginLeft: "auto" }}>
           <svg
-            width="13"
-            height="13"
-            viewBox="0 0 12 12"
-            fill="none"
-            className={`transition-transform duration-300 text-[#B8ADA0] ${
-              expanded ? "rotate-180" : ""
-            }`}
+            width="13" height="13" viewBox="0 0 12 12" fill="none"
+            style={{
+              transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
+              transition: "transform 0.3s ease",
+              color: c.textMuted,
+            }}
           >
-            <path
-              d="M2 4l4 4 4-4"
-              stroke="currentColor"
-              strokeWidth="1.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
+            <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.4"
+              strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
       </div>
 
-      {/* Sanskrit block */}
+      {/* Sanskrit */}
       {!compact && verse.sanskrit && (
-        <div className="p-4 bg-[#FAF8F5] rounded-lg border border-[#E8E4DF] border-l-[2.5px] border-l-[#B8860B]/40 mb-3">
-          <p className="font-['Tiro_Devanagari_Sanskrit',serif] text-base leading-[2] text-center text-[#6B4E2F] m-0">
+        <div style={{
+          padding: "14px 16px",
+          background: c.sanskritBg,
+          borderRadius: "10px",
+          border: `1px solid ${c.tagBorder}`,
+          borderLeft: `3px solid ${c.gold}`,
+        }}>
+          <p style={{
+            fontFamily: "'Tiro Devanagari Sanskrit', serif",
+            fontSize: "1rem",
+            lineHeight: 2,
+            textAlign: "center",
+            color: c.sanskrit,
+            margin: 0,
+          }}>
             {verse.sanskrit}
           </p>
         </div>
@@ -99,30 +143,45 @@ export default function VerseCard({ verse, compact = false, showAsk = true }) {
 
       {/* Transliteration (expanded) */}
       <ExpandSection open={expanded && !!verse.transliteration}>
-        <p className="text-sm italic text-[#B8860B]/60 leading-relaxed pl-2 border-l-[1.5px] border-[#B8860B]/20 m-0">
+        <p style={{
+          color: c.textSecondary,
+          fontStyle: "italic",
+          fontSize: "0.88rem",
+          lineHeight: 1.9,
+          margin: 0,
+          paddingLeft: "10px",
+          borderLeft: `2px solid ${c.tagBorder}`,
+        }}>
           {verse.transliteration}
         </p>
       </ExpandSection>
 
-      {/* Translation — always visible */}
-      <p
-        className={`text-[#2D2A26] leading-[1.85] m-0 ${
-          compact ? "text-[0.92rem]" : "text-base"
-        }`}
-      >
+      {/* Translation */}
+      <p style={{
+        color: c.text,
+        lineHeight: 1.85,
+        fontSize: compact ? "0.92rem" : "0.98rem",
+        margin: 0,
+      }}>
         {verse.translation}
       </p>
 
       {/* Commentary (expanded) */}
       <ExpandSection open={expanded && !!verse.commentary}>
-        {/* Subtle divider */}
-        <div className="flex items-center gap-2.5 my-1">
-          <div className="flex-1 h-px bg-gradient-to-r from-transparent to-[#E8E4DF]" />
-          <div className="w-1 h-1 rounded-full bg-[#D4C9BC]" />
-          <div className="flex-1 h-px bg-gradient-to-l from-transparent to-[#E8E4DF]" />
+        <div style={{
+          display: "flex", alignItems: "center", gap: "8px", margin: "4px 0",
+        }}>
+          <div style={{ flex: 1, height: "1px", background: `linear-gradient(to right, transparent, ${c.border})` }} />
+          <div style={{ width: 4, height: 4, borderRadius: "50%", background: c.textMuted, animation: "breathe 3s ease-in-out infinite" }} />
+          <div style={{ flex: 1, height: "1px", background: `linear-gradient(to left, transparent, ${c.border})` }} />
         </div>
-        <div className="p-3.5 bg-[#FAF8F5] rounded-lg border-l-2 border-[#B8860B]/20">
-          <p className="text-sm text-[#8A8580] leading-[1.85] m-0">
+        <div style={{
+          padding: "12px 14px",
+          background: c.goldSofter,
+          borderRadius: "10px",
+          borderLeft: `2px solid ${c.tagBorder}`,
+        }}>
+          <p style={{ color: c.textSecondary, fontSize: "0.9rem", lineHeight: 1.85, margin: 0 }}>
             {verse.commentary}
           </p>
         </div>
@@ -130,19 +189,56 @@ export default function VerseCard({ verse, compact = false, showAsk = true }) {
 
       {/* Actions */}
       {showAsk && (
-        <div
-          className="flex gap-2 mt-2"
-          onClick={(e) => e.stopPropagation()}
-        >
+        <div style={{ display: "flex", gap: "8px", marginTop: "4px" }} onClick={(e) => e.stopPropagation()}>
           <button
             onClick={() => navigate(`/verse/${verse.chapter}/${verse.verse}`)}
-            className="font-['Cormorant_Garamond',serif] text-[0.7rem] tracking-[0.1em] uppercase py-2 px-4 rounded-full border border-[#B8860B]/30 bg-[#B8860B]/8 text-[#B8860B] cursor-pointer transition-all duration-200 hover:bg-[#B8860B]/15 hover:border-[#B8860B]/50 inline-flex items-center gap-1.5"
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: "0.7rem",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              padding: "7px 16px",
+              borderRadius: "20px",
+              border: `1px solid ${c.tagBorder}`,
+              background: c.goldSoft,
+              color: c.gold,
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "5px",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = dark ? "rgba(196,154,60,0.18)" : "rgba(160,120,40,0.14)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = c.goldSoft; }}
           >
             ✦ Ask AI
           </button>
           <button
             onClick={() => navigate(`/verse/${verse.chapter}/${verse.verse}`)}
-            className="font-['Cormorant_Garamond',serif] text-[0.7rem] tracking-[0.1em] uppercase py-2 px-4 rounded-full border border-[#E8E4DF] bg-transparent text-[#8A8580] cursor-pointer transition-all duration-200 hover:bg-[#F0EDE8] hover:text-[#2D2A26] inline-flex items-center gap-1.5"
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: "0.7rem",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              padding: "7px 16px",
+              borderRadius: "20px",
+              border: `1px solid ${c.border}`,
+              background: "transparent",
+              color: c.textMuted,
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "5px",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = dark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.02)";
+              e.currentTarget.style.color = c.text;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.color = c.textMuted;
+            }}
           >
             Read full →
           </button>

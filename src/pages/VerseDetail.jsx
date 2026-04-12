@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getVerse, getChapter, VERSES } from "../data/gita";
+import { useTheme } from "../App";
 
 export default function VerseDetail() {
   const { chapterId, verseId } = useParams();
   const navigate = useNavigate();
+  const { dark } = useTheme();
   const verse = getVerse(chapterId, verseId);
   const chapter = getChapter(chapterId);
   const [chatOpen, setChatOpen] = useState(false);
@@ -16,6 +18,22 @@ export default function VerseDetail() {
   const currentIdx = chapterVerses.findIndex((v) => v.verse === Number(verseId));
   const prevVerse = chapterVerses[currentIdx - 1];
   const nextVerse = chapterVerses[currentIdx + 1];
+
+  const c = {
+    surface: dark ? "#1C1A17" : "#FFFFFF",
+    surfaceDim: dark ? "#161412" : "#F5F1EC",
+    border: dark ? "#2E2B27" : "#DDD7CE",
+    borderHover: dark ? "#3D3830" : "#C9C1B5",
+    gold: dark ? "#C49A3C" : "#A07828",
+    goldSoft: dark ? "rgba(196,154,60,0.1)" : "rgba(160,120,40,0.08)",
+    tagBorder: dark ? "rgba(196,154,60,0.18)" : "rgba(160,120,40,0.12)",
+    text: dark ? "#E8E0D4" : "#2A2520",
+    textMuted: dark ? "#6A6055" : "#A09888",
+    textSecondary: dark ? "#9A9080" : "#7A7068",
+    sanskrit: dark ? "#D4B878" : "#5C4020",
+    bubbleUser: dark ? "#C49A3C" : "#A07828",
+    bubbleAi: dark ? "#1C1A17" : "#F5F1EC",
+  };
 
   const sendMessage = async () => {
     if (!question.trim()) return;
@@ -33,228 +51,136 @@ export default function VerseDetail() {
           `The essence of this verse lies in the teaching: "${verse.translation}" — It reminds us that ${verse.topics.slice(0, 2).join(" and ")} are core to balanced living.`,
           `Krishna's message here is profound. When we understand "${verse.translation.slice(0, 80)}...", we begin to see how detachment and right action transform our relationship with outcomes.`,
         ];
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "ai",
-            text: placeholders[Math.floor(Math.random() * placeholders.length)],
-          },
-        ]);
+        setMessages((prev) => [...prev, { role: "ai", text: placeholders[Math.floor(Math.random() * placeholders.length)] }]);
       } else {
-        const systemPrompt = `You are a wise, compassionate Bhagavad Gita teacher. You are currently discussing Chapter ${verse.chapter}, Verse ${verse.verse}.\n\nThe verse: "${verse.translation}"\nSanskrit: ${verse.sanskrit}\nTopics: ${verse.topics.join(", ")}\nCommentary: ${verse.commentary}\n\nAnswer questions about this verse with wisdom, warmth, and practical insight. Connect ancient teachings to modern life. Keep answers concise (3-5 sentences max).`;
-
-        const res = await fetch(
-          "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" +
-            apiKey,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              contents: [
-                {
-                  role: "user",
-                  parts: [{ text: systemPrompt + "\n\n" + userMsg }],
-                },
-              ],
-            }),
-          }
-        );
+        const systemPrompt = `You are a wise, compassionate Bhagavad Gita teacher discussing Chapter ${verse.chapter}, Verse ${verse.verse}.\nVerse: "${verse.translation}"\nSanskrit: ${verse.sanskrit}\nTopics: ${verse.topics.join(", ")}\nCommentary: ${verse.commentary}\nAnswer with wisdom, warmth, and practical insight. Keep answers concise (3-5 sentences).`;
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: systemPrompt + "\n\n" + userMsg }] }] }),
+        });
         const data = await res.json();
-        const answer =
-          data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-          "I couldn't find an answer right now.";
+        const answer = data?.candidates?.[0]?.content?.parts?.[0]?.text || "I couldn't find an answer right now.";
         setMessages((prev) => [...prev, { role: "ai", text: answer }]);
       }
     } catch {
-      setMessages((prev) => [
-        ...prev,
-        { role: "ai", text: "There was an error. Please try again." },
-      ]);
+      setMessages((prev) => [...prev, { role: "ai", text: "There was an error. Please try again." }]);
     }
     setLoading(false);
   };
 
-  if (!verse)
-    return (
-      <div className="min-h-screen pt-16 text-center py-16">
-        <p className="text-[#8A8580] mb-4">
-          This verse isn&apos;t in our database yet.
-        </p>
-        <button
-          className="bg-transparent text-[#B8860B] font-medium py-2.5 px-6 rounded-full border border-[#B8860B]/25 cursor-pointer transition-all duration-300 hover:bg-[#B8860B]/5"
-          onClick={() => navigate(`/chapter/${chapterId}`)}
-        >
-          ← Back to Chapter
-        </button>
-      </div>
-    );
+  if (!verse) return (
+    <div style={{ minHeight: "100vh", paddingTop: "64px", textAlign: "center", padding: "64px" }}>
+      <p style={{ color: c.textMuted, marginBottom: "16px" }}>This verse isn&apos;t in our database yet.</p>
+      <button onClick={() => navigate(`/chapter/${chapterId}`)} style={{ background: "transparent", color: c.gold, fontWeight: 500, padding: "10px 24px", borderRadius: "99px", border: `1px solid ${c.tagBorder}`, cursor: "pointer" }}>
+        ← Back to Chapter
+      </button>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen pt-16 max-w-[750px] mx-auto px-6 py-10">
-      {/* Back */}
-      <button
-        onClick={() => navigate(`/chapter/${chapterId}`)}
-        className="bg-transparent border-none cursor-pointer text-[#B8860B] mb-6 flex items-center gap-1 text-sm hover:underline"
-      >
+    <div style={{ minHeight: "100vh", paddingTop: "64px", maxWidth: "750px", margin: "0 auto", padding: "88px 24px 48px" }}>
+      <button onClick={() => navigate(`/chapter/${chapterId}`)} style={{ background: "none", border: "none", cursor: "pointer", color: c.gold, marginBottom: "24px", display: "flex", alignItems: "center", gap: "4px", fontSize: "0.9rem" }}>
         ← {chapter?.name || `Chapter ${chapterId}`}
       </button>
 
-      {/* Verse header */}
-      <div style={{ animation: "fadeInUp 0.4s ease" }}>
-        <div className="flex gap-2 mb-5 flex-wrap">
-          <span className="text-xs tracking-wider uppercase text-[#B8860B]/70 bg-[#B8860B]/6 border border-[#B8860B]/12 rounded-full px-3 py-1">
-            Chapter {verse.chapter}
-          </span>
-          <span className="text-xs tracking-wider uppercase text-[#B8860B]/70 bg-[#B8860B]/6 border border-[#B8860B]/12 rounded-full px-3 py-1">
-            Verse {verse.verse}
-          </span>
+      <div style={{ animation: "fadeInUp 0.5s cubic-bezier(0.22,0.61,0.36,1) forwards", opacity: 0 }}>
+        {/* Tags */}
+        <div style={{ display: "flex", gap: "8px", marginBottom: "20px", flexWrap: "wrap" }}>
+          <span style={{ fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase", color: c.gold, background: c.goldSoft, border: `1px solid ${c.tagBorder}`, borderRadius: "20px", padding: "4px 12px" }}>Chapter {verse.chapter}</span>
+          <span style={{ fontSize: "0.65rem", letterSpacing: "0.1em", textTransform: "uppercase", color: c.gold, background: c.goldSoft, border: `1px solid ${c.tagBorder}`, borderRadius: "20px", padding: "4px 12px" }}>Verse {verse.verse}</span>
           {verse.topics.map((t) => (
-            <span
-              key={t}
-              className="text-[0.65rem] tracking-wider uppercase text-[#8A8580] bg-[#F3F0EB] border border-[#E8E4DF] rounded-full px-2.5 py-1"
-            >
-              {t}
-            </span>
+            <span key={t} style={{ fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase", color: c.textSecondary, background: c.surfaceDim, border: `1px solid ${c.border}`, borderRadius: "20px", padding: "4px 10px" }}>{t}</span>
           ))}
         </div>
 
         {/* Sanskrit */}
-        <div className="bg-white border border-[#E8E4DF] rounded-xl p-8 mb-6 text-center">
-          <p className="font-['Tiro_Devanagari_Sanskrit',serif] text-lg leading-[2.2] text-[#6B4E2F]">
+        <div style={{ background: c.surface, border: `1px solid ${c.border}`, borderRadius: "16px", padding: "32px 24px", marginBottom: "24px", textAlign: "center" }}>
+          <p style={{ fontFamily: "'Tiro Devanagari Sanskrit', serif", fontSize: "1.15rem", lineHeight: 2.2, color: c.sanskrit, animation: "breathe 5s ease-in-out infinite" }}>
             {verse.sanskrit}
           </p>
         </div>
 
         {/* Transliteration */}
-        <p className="italic text-[#B8860B]/50 text-sm leading-relaxed mb-5 text-center">
+        <p style={{ fontStyle: "italic", color: c.textMuted, fontSize: "0.88rem", lineHeight: 1.9, marginBottom: "20px", textAlign: "center" }}>
           {verse.transliteration}
         </p>
 
-        {/* Divider */}
-        <div className="h-px bg-[#E8E4DF] my-6" />
+        <div style={{ height: "1px", background: c.border, margin: "24px 0" }} />
 
         {/* Translation */}
-        <div className="mb-5">
-          <h3 className="text-xs text-[#8A8580] tracking-[0.1em] uppercase mb-3">
-            Translation
-          </h3>
-          <p className="text-lg leading-[1.9] text-[#2D2A26]">
-            &quot;{verse.translation}&quot;
-          </p>
+        <div style={{ marginBottom: "20px" }}>
+          <h3 style={{ fontSize: "0.75rem", color: c.textMuted, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "12px" }}>Translation</h3>
+          <p style={{ fontSize: "1.1rem", lineHeight: 1.9, color: c.text }}>&quot;{verse.translation}&quot;</p>
         </div>
 
         {/* Commentary */}
         {verse.commentary && (
-          <div className="p-5 bg-[#FAF8F5] rounded-xl border-l-3 border-[#B8860B]/25 mb-6">
-            <h3 className="text-xs text-[#B8860B] tracking-[0.15em] uppercase mb-3">
-              Commentary
-            </h3>
-            <p className="text-[#6B6560] leading-[1.9] text-base">
-              {verse.commentary}
-            </p>
+          <div style={{ padding: "20px", background: c.surfaceDim, borderRadius: "14px", borderLeft: `3px solid ${c.tagBorder}`, marginBottom: "24px" }}>
+            <h3 style={{ fontSize: "0.75rem", color: c.gold, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "10px" }}>Commentary</h3>
+            <p style={{ color: c.textSecondary, lineHeight: 1.9, fontSize: "0.95rem" }}>{verse.commentary}</p>
           </div>
         )}
       </div>
 
       {/* Actions */}
-      <div className="flex gap-2.5 mb-6 flex-wrap">
-        <button
-          className="bg-[#B8860B] text-white font-medium py-2.5 px-6 rounded-full border-none cursor-pointer transition-all duration-300 hover:bg-[#9A7209] text-sm"
-          onClick={() => setChatOpen((p) => !p)}
-        >
+      <div style={{ display: "flex", gap: "10px", marginBottom: "24px", flexWrap: "wrap" }}>
+        <button onClick={() => setChatOpen((p) => !p)} style={{ background: c.gold, color: "#fff", fontWeight: 500, padding: "10px 24px", borderRadius: "99px", border: "none", cursor: "pointer", transition: "all 0.3s ease", fontSize: "0.88rem" }}>
           ✦ {chatOpen ? "Close Chat" : "Ask AI About This Verse"}
         </button>
-        <button
-          className="bg-transparent text-[#8A8580] py-2.5 px-5 rounded-full border border-[#E8E4DF] cursor-pointer transition-all duration-300 hover:bg-[#F0EDE8] hover:text-[#2D2A26] text-sm"
-          onClick={() => {
-            const text = `"${verse.translation}" — Bhagavad Gita ${verse.chapter}.${verse.verse}`;
-            navigator.clipboard?.writeText(text);
-          }}
-        >
-          📋 Copy Verse
+        <button onClick={() => { navigator.clipboard?.writeText(`"${verse.translation}" — Bhagavad Gita ${verse.chapter}.${verse.verse}`); }} style={{ background: "transparent", color: c.textSecondary, padding: "10px 20px", borderRadius: "99px", border: `1px solid ${c.border}`, cursor: "pointer", transition: "all 0.3s ease", fontSize: "0.88rem" }}>
+          📋 Copy
         </button>
-        <button
-          className="bg-transparent text-[#8A8580] py-2.5 px-5 rounded-full border border-[#E8E4DF] cursor-pointer transition-all duration-300 hover:bg-[#F0EDE8] hover:text-[#2D2A26] text-sm"
-          onClick={() => {
-            const text = encodeURIComponent(
-              `"${verse.translation}" — Bhagavad Gita ${verse.chapter}.${verse.verse}`
-            );
-            window.open(`https://wa.me/?text=${text}`, "_blank");
-          }}
-        >
+        <button onClick={() => { window.open(`https://wa.me/?text=${encodeURIComponent(`"${verse.translation}" — Bhagavad Gita ${verse.chapter}.${verse.verse}`)}`, "_blank"); }} style={{ background: "transparent", color: c.textSecondary, padding: "10px 20px", borderRadius: "99px", border: `1px solid ${c.border}`, cursor: "pointer", transition: "all 0.3s ease", fontSize: "0.88rem" }}>
           📱 Share
         </button>
       </div>
 
-      {/* Inline AI Chat */}
+      {/* Chat */}
       {chatOpen && (
-        <div
-          className="bg-white border border-[#E8E4DF] rounded-2xl p-5 mb-6"
-          style={{ animation: "fadeInUp 0.3s ease" }}
-        >
-          <h3 className="text-base font-['Cormorant_Garamond',serif] font-semibold text-[#2D2A26] mb-4">
-            Ask about this verse
-          </h3>
+        <div style={{ background: c.surface, border: `1px solid ${c.border}`, borderRadius: "18px", padding: "20px", marginBottom: "24px", animation: "scaleIn 0.3s ease forwards" }}>
+          <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "1rem", fontWeight: 600, color: c.text, marginBottom: "16px" }}>Ask about this verse</h3>
 
-          {/* Suggested questions */}
           {messages.length === 0 && (
-            <div className="flex gap-2 flex-wrap mb-4">
-              {[
-                "Explain in simple words",
-                "How does this apply to modern life?",
-                "Give me a real-life example",
-                "What philosophy does this represent?",
-              ].map((q) => (
-                <button
-                  key={q}
-                  className="text-xs text-[#B8860B]/70 bg-[#B8860B]/6 border border-[#B8860B]/12 rounded-full px-3 py-1.5 cursor-pointer transition-all duration-200 hover:bg-[#B8860B]/12"
-                  onClick={() => setQuestion(q)}
-                >
-                  {q}
-                </button>
+            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "16px" }}>
+              {["Explain in simple words", "How does this apply to modern life?", "Give me a real-life example", "What philosophy does this represent?"].map((q) => (
+                <button key={q} onClick={() => setQuestion(q)} style={{ fontSize: "0.75rem", color: c.gold, background: c.goldSoft, border: `1px solid ${c.tagBorder}`, borderRadius: "20px", padding: "6px 14px", cursor: "pointer", transition: "all 0.2s" }}>{q}</button>
               ))}
             </div>
           )}
 
-          {/* Messages */}
           {messages.length > 0 && (
-            <div className="flex flex-col gap-3 max-h-80 overflow-y-auto mb-4 pr-1">
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px", maxHeight: "320px", overflowY: "auto", marginBottom: "16px", paddingRight: "4px" }}>
               {messages.map((m, i) => (
-                <div
-                  key={i}
-                  className={
-                    m.role === "user"
-                      ? "bg-[#B8860B] text-white rounded-[18px_18px_4px_18px] py-3 px-4 max-w-[75%] self-end text-sm"
-                      : "bg-[#F3F0EB] text-[#2D2A26] border border-[#E8E4DF] rounded-[18px_18px_18px_4px] py-3 px-4 max-w-[80%] self-start leading-relaxed text-sm"
-                  }
-                >
+                <div key={i} style={{
+                  background: m.role === "user" ? c.bubbleUser : c.bubbleAi,
+                  color: m.role === "user" ? "#fff" : c.text,
+                  borderRadius: m.role === "user" ? "18px 18px 4px 18px" : "18px 18px 18px 4px",
+                  padding: "12px 16px",
+                  maxWidth: m.role === "user" ? "75%" : "80%",
+                  alignSelf: m.role === "user" ? "flex-end" : "flex-start",
+                  fontSize: "0.88rem", lineHeight: 1.7,
+                  border: m.role === "ai" ? `1px solid ${c.border}` : "none",
+                  animation: "fadeInUp 0.3s ease",
+                }}>
                   {m.text}
                 </div>
               ))}
               {loading && (
-                <div className="bg-[#F3F0EB] border border-[#E8E4DF] rounded-[18px_18px_18px_4px] py-3 px-4 self-start flex gap-1 items-center">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#B8ADA0] animate-pulse" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#B8ADA0] animate-pulse [animation-delay:0.2s]" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#B8ADA0] animate-pulse [animation-delay:0.4s]" />
+                <div style={{ background: c.bubbleAi, border: `1px solid ${c.border}`, borderRadius: "18px 18px 18px 4px", padding: "12px 16px", alignSelf: "flex-start", display: "flex", gap: "6px", alignItems: "center" }}>
+                  {[0, 1, 2].map((i) => (
+                    <span key={i} style={{ width: 6, height: 6, borderRadius: "50%", background: c.textMuted, display: "inline-block", animation: `dotPulse 1.4s ease-in-out ${i * 0.16}s infinite` }} />
+                  ))}
                 </div>
               )}
             </div>
           )}
 
-          {/* Input */}
-          <div className="flex gap-2">
-            <input
-              className="flex-1 py-2.5 px-4 bg-[#FAF8F5] border border-[#E8E4DF] rounded-xl text-[#2D2A26] text-sm outline-none transition-all duration-300 focus:border-[#B8860B]/30 focus:shadow-[0_0_0_3px_rgba(184,134,11,0.06)] placeholder:text-[#B8ADA0]"
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-              placeholder="Ask about this verse..."
-            />
-            <button
-              className="bg-[#B8860B] text-white py-2.5 px-5 rounded-xl border-none cursor-pointer transition-all duration-300 hover:bg-[#9A7209] text-sm shrink-0 disabled:opacity-40 disabled:cursor-default"
-              onClick={sendMessage}
-              disabled={loading || !question.trim()}
-            >
+          <div style={{ display: "flex", gap: "8px" }}>
+            <input value={question} onChange={(e) => setQuestion(e.target.value)} onKeyDown={(e) => e.key === "Enter" && sendMessage()} placeholder="Ask about this verse..."
+              style={{ flex: 1, padding: "10px 16px", background: c.surfaceDim, border: `1px solid ${c.border}`, borderRadius: "12px", color: c.text, fontSize: "0.88rem", outline: "none", transition: "border-color 0.3s", fontFamily: "inherit" }} />
+            <button onClick={sendMessage} disabled={loading || !question.trim()}
+              style={{ background: c.gold, color: "#fff", padding: "10px 20px", borderRadius: "12px", border: "none", cursor: loading || !question.trim() ? "default" : "pointer", fontSize: "0.88rem", opacity: loading || !question.trim() ? 0.4 : 1, transition: "all 0.3s", flexShrink: 0 }}>
               Send
             </button>
           </div>
@@ -262,28 +188,12 @@ export default function VerseDetail() {
       )}
 
       {/* Prev / Next */}
-      <div className="flex justify-between gap-3 flex-wrap">
+      <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", flexWrap: "wrap" }}>
         {prevVerse ? (
-          <button
-            className="bg-transparent text-[#8A8580] py-2.5 px-5 rounded-full border border-[#E8E4DF] cursor-pointer transition-all duration-300 hover:bg-[#F0EDE8] hover:text-[#2D2A26] text-sm"
-            onClick={() =>
-              navigate(`/verse/${chapterId}/${prevVerse.verse}`)
-            }
-          >
-            ← Verse {prevVerse.verse}
-          </button>
-        ) : (
-          <div />
-        )}
+          <button onClick={() => navigate(`/verse/${chapterId}/${prevVerse.verse}`)} style={{ background: "transparent", color: c.textSecondary, padding: "10px 20px", borderRadius: "99px", border: `1px solid ${c.border}`, cursor: "pointer", transition: "all 0.3s", fontSize: "0.85rem" }}>← Verse {prevVerse.verse}</button>
+        ) : <div />}
         {nextVerse && (
-          <button
-            className="bg-transparent text-[#8A8580] py-2.5 px-5 rounded-full border border-[#E8E4DF] cursor-pointer transition-all duration-300 hover:bg-[#F0EDE8] hover:text-[#2D2A26] text-sm"
-            onClick={() =>
-              navigate(`/verse/${chapterId}/${nextVerse.verse}`)
-            }
-          >
-            Verse {nextVerse.verse} →
-          </button>
+          <button onClick={() => navigate(`/verse/${chapterId}/${nextVerse.verse}`)} style={{ background: "transparent", color: c.textSecondary, padding: "10px 20px", borderRadius: "99px", border: `1px solid ${c.border}`, cursor: "pointer", transition: "all 0.3s", fontSize: "0.85rem" }}>Verse {nextVerse.verse} →</button>
         )}
       </div>
     </div>

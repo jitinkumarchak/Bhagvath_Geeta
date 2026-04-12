@@ -1,5 +1,49 @@
 @import "tailwindcss";
 
+/* ─── Custom Utilities for Tailwind v4 ─────────────────── */
+@theme {
+  --color-cream: #F0EBE3;
+  --color-cream-dim: #E8E2D8;
+  --color-surface: #FFFFFF;
+  --color-surface-hover: #F5F1EC;
+  --color-border: #DDD7CE;
+  --color-border-hover: #C9C1B5;
+  --color-gold: #A07828;
+  --color-gold-light: #C49A3C;
+  --color-gold-soft: rgba(160, 120, 40, 0.08);
+  --color-gold-softer: rgba(160, 120, 40, 0.04);
+  --color-text: #2A2520;
+  --color-text-secondary: #7A7068;
+  --color-text-muted: #A09888;
+  --color-sanskrit: #5C4020;
+
+  /* Dark mode colors */
+  --color-dark-bg: #121210;
+  --color-dark-surface: #1C1A17;
+  --color-dark-surface-hover: #252320;
+  --color-dark-border: #2E2B27;
+  --color-dark-border-hover: #3D3830;
+  --color-dark-text: #E8E0D4;
+  --color-dark-text-secondary: #9A9080;
+  --color-dark-text-muted: #6A6055;
+  --color-dark-gold: #C49A3C;
+  --color-dark-gold-soft: rgba(196, 154, 60, 0.1);
+  --color-dark-sanskrit: #D4B878;
+
+  /* Animations */
+  --animate-fade-up: fadeInUp 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  --animate-fade-up-delay-1: fadeInUp 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) 0.1s forwards;
+  --animate-fade-up-delay-2: fadeInUp 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s forwards;
+  --animate-fade-up-delay-3: fadeInUp 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s forwards;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-glow-soft: glowSoft 4s ease-in-out infinite;
+  --animate-shimmer: shimmer 2.5s ease-in-out infinite;
+  --animate-breathe: breathe 4s ease-in-out infinite;
+  --animate-spin-slow: spinSlow 2s linear infinite;
+  --animate-slide-in-right: slideInRight 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  --animate-scale-in: scaleIn 0.3s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
 /* ─── Reset ─────────────────────────────────────────────── */
 *,
 *::before,
@@ -13,51 +57,79 @@ html {
   scroll-behavior: smooth;
 }
 
+/* ─── Light Mode Body ───────────────────────────────────── */
 body {
-  background-color: #FAF8F5;
-  color: #2D2A26;
+  background-color: var(--color-cream);
+  color: var(--color-text);
   font-family: 'Manrope', system-ui, sans-serif;
   font-size: 16px;
   line-height: 1.6;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ─── Dark Mode Body ────────────────────────────────────── */
+body.dark {
+  background-color: var(--color-dark-bg);
+  color: var(--color-dark-text);
 }
 
 /* ─── Scrollbar ─────────────────────────────────────────── */
-::-webkit-scrollbar {
-  width: 6px;
-}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #C9C1B5; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: #A09888; }
+body.dark ::-webkit-scrollbar-thumb { background: #3D3830; }
+body.dark ::-webkit-scrollbar-thumb:hover { background: #5A5248; }
 
-::-webkit-scrollbar-track {
-  background: #FAF8F5;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #D4C9BC;
-  border-radius: 99px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #B8ADA0;
-}
-
-/* ─── Animation ─────────────────────────────────────────── */
+/* ─── Keyframes ─────────────────────────────────────────── */
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes gentlePulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; }
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
-@keyframes spin-slow {
+@keyframes glowSoft {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(160,120,40,0.15)); }
+  50% { filter: drop-shadow(0 0 20px rgba(160,120,40,0.3)); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+
+@keyframes spinSlow {
   to { transform: rotate(360deg); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes dotPulse {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
 }

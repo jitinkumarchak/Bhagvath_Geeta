@@ -1,122 +1,122 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { getDailyVerse, VERSES } from "../data/gita";
+import { useTheme } from "../App";
 
 export default function Daily() {
   const navigate = useNavigate();
+  const { dark } = useTheme();
   const daily = getDailyVerse();
 
-  const dayIndex = VERSES.findIndex(
-    (v) => v.chapter === daily.chapter && v.verse === daily.verse
-  );
+  const dayIndex = VERSES.findIndex((v) => v.chapter === daily.chapter && v.verse === daily.verse);
   const recent = [
     VERSES[(dayIndex - 1 + VERSES.length) % VERSES.length],
     VERSES[(dayIndex - 2 + VERSES.length) % VERSES.length],
   ].filter((v) => v.verse !== daily.verse);
 
+  const c = {
+    surface: dark ? "#1C1A17" : "#FFFFFF",
+    surfaceDim: dark ? "#161412" : "#F5F1EC",
+    border: dark ? "#2E2B27" : "#DDD7CE",
+    borderHover: dark ? "#3D3830" : "#C9C1B5",
+    gold: dark ? "#C49A3C" : "#A07828",
+    goldSoft: dark ? "rgba(196,154,60,0.1)" : "rgba(160,120,40,0.08)",
+    tagBorder: dark ? "rgba(196,154,60,0.18)" : "rgba(160,120,40,0.12)",
+    text: dark ? "#E8E0D4" : "#2A2520",
+    textMuted: dark ? "#6A6055" : "#A09888",
+    textSecondary: dark ? "#9A9080" : "#7A7068",
+    sanskrit: dark ? "#D4B878" : "#5C4020",
+  };
+
   return (
-    <div className="min-h-screen pt-16 max-w-[700px] mx-auto px-6 py-10">
+    <div style={{ minHeight: "100vh", paddingTop: "64px", maxWidth: "700px", margin: "0 auto", padding: "88px 24px 48px" }}>
       {/* Header */}
-      <div
-        className="text-center mb-10"
-        style={{ animation: "fadeInUp 0.5s ease" }}
-      >
-        <h1 className="font-['Cormorant_Garamond',serif] text-3xl font-semibold text-[#2D2A26] mb-2">
+      <div style={{ textAlign: "center", marginBottom: "40px", animation: "fadeInUp 0.5s cubic-bezier(0.22,0.61,0.36,1) forwards", opacity: 0 }}>
+        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "2rem", fontWeight: 600, color: c.text, marginBottom: "8px" }}>
           Daily Wisdom
         </h1>
-        <p className="text-[#8A8580]">
-          {new Date().toLocaleDateString("en-IN", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
+        <p style={{ color: c.textSecondary }}>
+          {new Date().toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
         </p>
       </div>
 
       {/* Today's verse */}
-      <div
-        className="bg-white border border-[#E8E4DF] rounded-2xl p-8 mb-6 text-center"
-        style={{ animation: "fadeInUp 0.5s ease 0.1s backwards" }}
-      >
-        <span className="inline-flex py-1 px-4 bg-[#B8860B] text-white rounded-full text-xs font-semibold mb-5">
+      <div style={{
+        background: c.surface, border: `1px solid ${c.border}`, borderRadius: "18px",
+        padding: "32px", marginBottom: "20px", textAlign: "center",
+        animation: "fadeInUp 0.5s cubic-bezier(0.22,0.61,0.36,1) 0.1s forwards", opacity: 0,
+      }}>
+        <span style={{
+          display: "inline-flex", padding: "4px 16px",
+          background: c.gold, color: "#fff", borderRadius: "99px",
+          fontSize: "0.72rem", fontWeight: 600, marginBottom: "20px", letterSpacing: "0.05em",
+        }}>
           ✦ Today&apos;s Verse
         </span>
 
-        <p className="font-['Tiro_Devanagari_Sanskrit',serif] text-base leading-[2.2] text-[#6B4E2F] mb-5">
+        <p style={{
+          fontFamily: "'Tiro Devanagari Sanskrit', serif", fontSize: "1.05rem",
+          lineHeight: 2.2, color: c.sanskrit, marginBottom: "20px",
+          animation: "breathe 5s ease-in-out infinite",
+        }}>
           {daily.sanskrit}
         </p>
 
-        {/* Divider */}
-        <div className="h-px bg-[#E8E4DF] my-5" />
+        <div style={{ height: "1px", background: c.border, margin: "20px 0" }} />
 
-        <p className="text-lg leading-[1.9] text-[#2D2A26] mb-4">
+        <p style={{ fontSize: "1.05rem", lineHeight: 1.9, color: c.text, marginBottom: "16px" }}>
           &quot;{daily.translation}&quot;
         </p>
 
-        <p className="text-[#8A8580] text-sm mb-6">
+        <p style={{ color: c.textMuted, fontSize: "0.85rem", marginBottom: "24px" }}>
           — Bhagavad Gita {daily.chapter}.{daily.verse}
         </p>
 
         {daily.commentary && (
-          <div className="p-4 bg-[#FAF8F5] border border-[#E8E4DF] rounded-xl text-left mb-5">
-            <p className="text-[#8A8580] text-sm leading-[1.8]">
+          <div style={{ padding: "16px", background: c.surfaceDim, border: `1px solid ${c.border}`, borderRadius: "12px", textAlign: "left", marginBottom: "20px" }}>
+            <p style={{ color: c.textSecondary, fontSize: "0.88rem", lineHeight: 1.8 }}>
               💡 {daily.commentary}
             </p>
           </div>
         )}
 
-        <div className="flex gap-2.5 justify-center flex-wrap">
-          <button
-            className="bg-[#B8860B] text-white font-medium py-2.5 px-6 rounded-full border-none cursor-pointer transition-all duration-300 hover:bg-[#9A7209] text-sm"
-            onClick={() => navigate(`/verse/${daily.chapter}/${daily.verse}`)}
-          >
+        <div style={{ display: "flex", gap: "10px", justifyContent: "center", flexWrap: "wrap" }}>
+          <button onClick={() => navigate(`/verse/${daily.chapter}/${daily.verse}`)} style={{ background: c.gold, color: "#fff", fontWeight: 500, padding: "10px 24px", borderRadius: "99px", border: "none", cursor: "pointer", transition: "all 0.3s", fontSize: "0.85rem" }}>
             ✦ Explore & Ask AI
           </button>
-          <button
-            className="bg-transparent text-[#8A8580] py-2.5 px-5 rounded-full border border-[#E8E4DF] cursor-pointer transition-all duration-300 hover:bg-[#F0EDE8] hover:text-[#2D2A26] text-sm"
-            onClick={() => {
-              const text = `"${daily.translation}" — Bhagavad Gita ${daily.chapter}.${daily.verse}`;
-              navigator.clipboard?.writeText(text);
-            }}
-          >
+          <button onClick={() => { navigator.clipboard?.writeText(`"${daily.translation}" — Bhagavad Gita ${daily.chapter}.${daily.verse}`); }} style={{ background: "transparent", color: c.textSecondary, padding: "10px 20px", borderRadius: "99px", border: `1px solid ${c.border}`, cursor: "pointer", transition: "all 0.3s", fontSize: "0.85rem" }}>
             📋 Copy
           </button>
         </div>
       </div>
 
       {/* Reflection */}
-      <div
-        className="bg-white border border-[#E8E4DF] rounded-xl p-5 mb-6"
-        style={{ animation: "fadeInUp 0.5s ease 0.2s backwards" }}
-      >
-        <h3 className="font-['Cormorant_Garamond',serif] text-base font-semibold text-[#2D2A26] mb-2">
+      <div style={{ background: c.surface, border: `1px solid ${c.border}`, borderRadius: "14px", padding: "20px", marginBottom: "20px", animation: "fadeInUp 0.5s cubic-bezier(0.22,0.61,0.36,1) 0.2s forwards", opacity: 0 }}>
+        <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "1rem", fontWeight: 600, color: c.text, marginBottom: "8px" }}>
           🧘 Today&apos;s Reflection
         </h3>
-        <p className="text-[#8A8580] leading-[1.8] text-sm">
+        <p style={{ color: c.textSecondary, lineHeight: 1.8, fontSize: "0.9rem" }}>
           Sit quietly for a moment. Read the verse again. Ask yourself:{" "}
-          <em className="text-[#2D2A26]">
-            &quot;Where in my life today can I apply this teaching?&quot;
-          </em>
+          <em style={{ color: c.text }}>&quot;Where in my life today can I apply this teaching?&quot;</em>
         </p>
       </div>
 
-      {/* Recent verses */}
+      {/* Recent */}
       {recent.length > 0 && (
-        <div style={{ animation: "fadeInUp 0.5s ease 0.3s backwards" }}>
-          <h2 className="font-['Cormorant_Garamond',serif] text-lg font-semibold text-[#2D2A26] mb-4">
+        <div style={{ animation: "fadeInUp 0.5s cubic-bezier(0.22,0.61,0.36,1) 0.3s forwards", opacity: 0 }}>
+          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "1.2rem", fontWeight: 600, color: c.text, marginBottom: "16px" }}>
             Recent Verses
           </h2>
           {recent.map((v) => (
-            <div
-              key={`${v.chapter}-${v.verse}`}
-              className="bg-white border border-[#E8E4DF] rounded-xl p-4 mb-2.5 cursor-pointer transition-all duration-300 hover:border-[#D4C9BC] hover:shadow-[0_4px_20px_rgba(0,0,0,0.04)]"
+            <div key={`${v.chapter}-${v.verse}`} style={{ background: c.surface, border: `1px solid ${c.border}`, borderRadius: "14px", padding: "16px", marginBottom: "10px", cursor: "pointer", transition: "all 0.3s" }}
               onClick={() => navigate(`/verse/${v.chapter}/${v.verse}`)}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = c.borderHover; e.currentTarget.style.transform = "translateY(-2px)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = c.border; e.currentTarget.style.transform = "translateY(0)"; }}
             >
-              <span className="text-[0.65rem] tracking-wider uppercase text-[#B8860B]/70 bg-[#B8860B]/6 border border-[#B8860B]/12 rounded-full px-2 py-0.5 mb-2 inline-block">
+              <span style={{ fontSize: "0.6rem", letterSpacing: "0.1em", textTransform: "uppercase", color: c.gold, background: c.goldSoft, border: `1px solid ${c.tagBorder}`, borderRadius: "20px", padding: "2px 10px", marginBottom: "8px", display: "inline-block" }}>
                 Ch {v.chapter} · V {v.verse}
               </span>
-              <p className="text-[#2D2A26] text-sm leading-relaxed mt-1.5">
+              <p style={{ color: c.text, fontSize: "0.88rem", lineHeight: 1.7, marginTop: "8px" }}>
                 &quot;{v.translation.slice(0, 120)}...&quot;
               </p>
             </div>

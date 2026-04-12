@@ -1,40 +1,66 @@
 import React, { useState } from "react";
 import { ALL_TOPICS, getVersesByTopic } from "../data/gita";
 import VerseCard from "../components/VerseCard";
+import { useTheme } from "../App";
 
 export default function Explore() {
+  const { dark } = useTheme();
   const [active, setActive] = useState(null);
   const results = active ? getVersesByTopic(active) : [];
 
+  const c = {
+    surface: dark ? "#1C1A17" : "#FFFFFF",
+    border: dark ? "#2E2B27" : "#DDD7CE",
+    borderHover: dark ? "#3D3830" : "#C9C1B5",
+    gold: dark ? "#C49A3C" : "#A07828",
+    goldSoft: dark ? "rgba(196,154,60,0.1)" : "rgba(160,120,40,0.08)",
+    text: dark ? "#E8E0D4" : "#2A2520",
+    textMuted: dark ? "#6A6055" : "#A09888",
+    textSecondary: dark ? "#9A9080" : "#7A7068",
+  };
+
   return (
-    <div className="min-h-screen pt-16 max-w-[850px] mx-auto px-6 py-10">
+    <div style={{ minHeight: "100vh", paddingTop: "64px", maxWidth: "850px", margin: "0 auto", padding: "88px 24px 48px" }}>
       {/* Header */}
-      <div
-        className="text-center mb-10"
-        style={{ animation: "fadeInUp 0.5s ease" }}
-      >
-        <h1 className="font-['Cormorant_Garamond',serif] text-3xl font-semibold text-[#2D2A26] mb-3">
+      <div style={{ textAlign: "center", marginBottom: "40px", animation: "fadeInUp 0.5s cubic-bezier(0.22,0.61,0.36,1) forwards", opacity: 0 }}>
+        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "2rem", fontWeight: 600, color: c.text, marginBottom: "12px" }}>
           Explore by Topic
         </h1>
-        <p className="text-[#8A8580] max-w-[420px] mx-auto leading-relaxed">
+        <p style={{ color: c.textSecondary, maxWidth: "420px", margin: "0 auto", lineHeight: 1.7 }}>
           Dive deep into the Gita&apos;s teachings by choosing a theme that speaks to you.
         </p>
       </div>
 
       {/* Topic cloud */}
-      <div
-        className="flex flex-wrap gap-2 justify-center mb-10"
-        style={{ animation: "fadeInUp 0.5s ease 0.1s backwards" }}
-      >
-        {ALL_TOPICS.map((topic) => (
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", justifyContent: "center", marginBottom: "40px", animation: "fadeInUp 0.5s cubic-bezier(0.22,0.61,0.36,1) 0.1s forwards", opacity: 0 }}>
+        {ALL_TOPICS.map((topic, i) => (
           <button
             key={topic}
-            className={`text-sm px-4 py-2 rounded-full border cursor-pointer transition-all duration-200 ${
-              active === topic
-                ? "bg-[#B8860B] text-white border-[#B8860B] font-semibold"
-                : "bg-white text-[#6B6560] border-[#E8E4DF] hover:bg-[#F3F0EB] hover:border-[#D4C9BC] hover:text-[#2D2A26]"
-            }`}
             onClick={() => setActive(active === topic ? null : topic)}
+            style={{
+              fontSize: "0.85rem", padding: "8px 18px", borderRadius: "99px",
+              border: `1px solid ${active === topic ? c.gold : c.border}`,
+              background: active === topic ? c.gold : c.surface,
+              color: active === topic ? "#fff" : c.textSecondary,
+              fontWeight: active === topic ? 600 : 400,
+              cursor: "pointer", transition: "all 0.25s cubic-bezier(0.22,0.61,0.36,1)",
+              transform: active === topic ? "scale(1.05)" : "scale(1)",
+              fontFamily: "inherit",
+            }}
+            onMouseEnter={(e) => {
+              if (active !== topic) {
+                e.currentTarget.style.borderColor = c.borderHover;
+                e.currentTarget.style.background = dark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.02)";
+                e.currentTarget.style.color = c.text;
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (active !== topic) {
+                e.currentTarget.style.borderColor = c.border;
+                e.currentTarget.style.background = c.surface;
+                e.currentTarget.style.color = c.textSecondary;
+              }
+            }}
           >
             {topic.charAt(0).toUpperCase() + topic.slice(1)}
           </button>
@@ -43,23 +69,19 @@ export default function Explore() {
 
       {/* Results */}
       {active && (
-        <div style={{ animation: "fadeInUp 0.4s ease" }}>
-          <h2 className="font-['Cormorant_Garamond',serif] text-xl font-semibold text-[#2D2A26] mb-1 capitalize">
-            {active}
-          </h2>
-          <p className="text-[#8A8580] text-sm mb-5">
+        <div style={{ animation: "fadeInUp 0.4s cubic-bezier(0.22,0.61,0.36,1) forwards", opacity: 0 }}>
+          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "1.3rem", fontWeight: 600, color: c.text, marginBottom: "6px", textTransform: "capitalize" }}>{active}</h2>
+          <p style={{ color: c.textMuted, fontSize: "0.85rem", marginBottom: "20px" }}>
             {results.length} {results.length === 1 ? "verse" : "verses"} on this topic
           </p>
-          <div className="flex flex-col gap-3">
-            {results.map((v) => (
-              <VerseCard key={`${v.chapter}-${v.verse}`} verse={v} />
-            ))}
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            {results.map((v) => <VerseCard key={`${v.chapter}-${v.verse}`} verse={v} />)}
           </div>
         </div>
       )}
 
       {!active && (
-        <p className="text-center text-[#8A8580]">
+        <p style={{ textAlign: "center", color: c.textMuted }}>
           Select a topic above to see related verses ↑
         </p>
       )}

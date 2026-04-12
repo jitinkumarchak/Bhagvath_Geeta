@@ -1,20 +1,12 @@
 import React, { useState, useMemo } from "react";
 import { searchVerses } from "../data/gita";
 import VerseCard from "../components/VerseCard";
+import { useTheme } from "../App";
 
-const SUGGESTIONS = [
-  "karma",
-  "soul",
-  "duty",
-  "mind",
-  "death",
-  "action",
-  "surrender",
-  "peace",
-  "discipline",
-];
+const SUGGESTIONS = ["karma", "soul", "duty", "mind", "death", "action", "surrender", "peace", "discipline"];
 
 export default function Search() {
+  const { dark } = useTheme();
   const [query, setQuery] = useState("");
 
   const results = useMemo(() => {
@@ -22,97 +14,81 @@ export default function Search() {
     return searchVerses(query.trim());
   }, [query]);
 
+  const c = {
+    surface: dark ? "#1C1A17" : "#FFFFFF",
+    surfaceDim: dark ? "#161412" : "#F5F1EC",
+    border: dark ? "#2E2B27" : "#DDD7CE",
+    borderHover: dark ? "#3D3830" : "#C9C1B5",
+    gold: dark ? "#C49A3C" : "#A07828",
+    goldSoft: dark ? "rgba(196,154,60,0.1)" : "rgba(160,120,40,0.08)",
+    tagBorder: dark ? "rgba(196,154,60,0.18)" : "rgba(160,120,40,0.12)",
+    text: dark ? "#E8E0D4" : "#2A2520",
+    textMuted: dark ? "#6A6055" : "#A09888",
+    textSecondary: dark ? "#9A9080" : "#7A7068",
+  };
+
   return (
-    <div className="min-h-screen pt-16 max-w-[750px] mx-auto px-6 py-10">
+    <div style={{ minHeight: "100vh", paddingTop: "64px", maxWidth: "750px", margin: "0 auto", padding: "88px 24px 48px" }}>
       {/* Header */}
-      <div
-        className="text-center mb-8"
-        style={{ animation: "fadeInUp 0.5s ease" }}
-      >
-        <h1 className="font-['Cormorant_Garamond',serif] text-3xl font-semibold text-[#2D2A26] mb-3">
-          Search the Gita
-        </h1>
-        <p className="text-[#8A8580] max-w-[400px] mx-auto leading-relaxed">
-          Search by concept, keyword, emotion, or philosophy
-        </p>
+      <div style={{ textAlign: "center", marginBottom: "32px", animation: "fadeInUp 0.5s cubic-bezier(0.22,0.61,0.36,1) forwards", opacity: 0 }}>
+        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "2rem", fontWeight: 600, color: c.text, marginBottom: "12px" }}>Search the Gita</h1>
+        <p style={{ color: c.textSecondary, maxWidth: "400px", margin: "0 auto", lineHeight: 1.7 }}>Search by concept, keyword, emotion, or philosophy</p>
       </div>
 
       {/* Search input */}
-      <div
-        className="relative mb-5"
-        style={{ animation: "fadeInUp 0.5s ease 0.1s backwards" }}
-      >
-        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#B8ADA0] text-sm pointer-events-none">
-          🔍
-        </span>
-        <input
-          className="w-full py-3 pl-10 pr-10 bg-white border border-[#E8E4DF] rounded-xl text-[#2D2A26] text-sm outline-none transition-all duration-300 focus:border-[#B8860B]/30 focus:shadow-[0_0_0_3px_rgba(184,134,11,0.06)] placeholder:text-[#B8ADA0]"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search karma, duty, soul, mind..."
-          autoFocus
-          id="verse-search-input"
+      <div style={{ position: "relative", marginBottom: "20px", animation: "fadeInUp 0.5s cubic-bezier(0.22,0.61,0.36,1) 0.1s forwards", opacity: 0 }}>
+        <span style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", fontSize: "1rem", pointerEvents: "none", color: c.textMuted }}>🔍</span>
+        <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search karma, duty, soul, mind..." autoFocus id="verse-search-input"
+          style={{
+            width: "100%", padding: "12px 40px 12px 44px",
+            background: c.surface, border: `1px solid ${c.border}`, borderRadius: "14px",
+            color: c.text, fontSize: "0.92rem", outline: "none",
+            transition: "all 0.3s", fontFamily: "inherit",
+          }}
+          onFocus={(e) => { e.currentTarget.style.borderColor = dark ? "rgba(196,154,60,0.3)" : "rgba(160,120,40,0.25)"; e.currentTarget.style.boxShadow = `0 0 0 3px ${dark ? "rgba(196,154,60,0.06)" : "rgba(160,120,40,0.06)"}`; }}
+          onBlur={(e) => { e.currentTarget.style.borderColor = c.border; e.currentTarget.style.boxShadow = "none"; }}
         />
         {query && (
-          <button
-            className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none cursor-pointer text-[#B8ADA0] text-sm hover:text-[#6B6560]"
-            onClick={() => setQuery("")}
-          >
-            ✕
-          </button>
+          <button onClick={() => setQuery("")} style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: c.textMuted, fontSize: "0.95rem" }}>✕</button>
         )}
       </div>
 
       {/* Suggestions */}
       {!query && (
-        <div
-          className="flex gap-2 flex-wrap mb-8"
-          style={{ animation: "fadeInUp 0.5s ease 0.15s backwards" }}
-        >
-          <span className="text-[#8A8580] text-sm w-full mb-1">
-            Try searching for:
-          </span>
+        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "36px", animation: "fadeInUp 0.5s cubic-bezier(0.22,0.61,0.36,1) 0.15s forwards", opacity: 0 }}>
+          <span style={{ color: c.textMuted, fontSize: "0.82rem", width: "100%", marginBottom: "4px" }}>Try searching for:</span>
           {SUGGESTIONS.map((s) => (
-            <button
-              key={s}
-              className="text-sm text-[#6B6560] bg-white border border-[#E8E4DF] rounded-full px-4 py-1.5 cursor-pointer transition-all duration-200 hover:bg-[#F3F0EB] hover:border-[#D4C9BC] hover:text-[#2D2A26]"
-              onClick={() => setQuery(s)}
-            >
-              {s}
-            </button>
+            <button key={s} onClick={() => setQuery(s)} style={{
+              fontSize: "0.82rem", color: c.textSecondary, background: c.surface,
+              border: `1px solid ${c.border}`, borderRadius: "99px",
+              padding: "6px 16px", cursor: "pointer", transition: "all 0.2s", fontFamily: "inherit",
+            }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = c.borderHover; e.currentTarget.style.color = c.text; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = c.border; e.currentTarget.style.color = c.textSecondary; }}
+            >{s}</button>
           ))}
         </div>
       )}
 
-      {/* Results count */}
+      {/* Count */}
       {query.trim().length >= 2 && (
-        <p className="text-[#8A8580] text-sm mb-4">
-          {results.length > 0
-            ? `${results.length} verse${results.length > 1 ? "s" : ""} found for "${query}"`
-            : `No verses found for "${query}"`}
+        <p style={{ color: c.textMuted, fontSize: "0.85rem", marginBottom: "16px" }}>
+          {results.length > 0 ? `${results.length} verse${results.length > 1 ? "s" : ""} found for "${query}"` : `No verses found for "${query}"`}
         </p>
       )}
 
       {/* Results */}
-      <div className="flex flex-col gap-3">
-        {results.map((v) => (
-          <VerseCard key={`${v.chapter}-${v.verse}`} verse={v} />
-        ))}
+      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+        {results.map((v) => <VerseCard key={`${v.chapter}-${v.verse}`} verse={v} />)}
       </div>
 
       {/* No results */}
       {query.trim().length >= 2 && results.length === 0 && (
-        <div className="text-center py-10 border border-dashed border-[#E8E4DF] rounded-2xl text-[#8A8580]">
-          <p className="mb-2">No verses matched your search.</p>
-          <p className="text-sm">
+        <div style={{ textAlign: "center", padding: "40px", border: `1px dashed ${c.border}`, borderRadius: "18px", color: c.textMuted }}>
+          <p style={{ marginBottom: "8px" }}>No verses matched your search.</p>
+          <p style={{ fontSize: "0.85rem" }}>
             Try simpler keywords like &quot;karma&quot;, &quot;duty&quot;, &quot;soul&quot; or{" "}
-            <span
-              className="text-[#B8860B] cursor-pointer hover:underline"
-              onClick={() => setQuery("")}
-            >
-              clear the search
-            </span>
-            .
+            <span onClick={() => setQuery("")} style={{ color: c.gold, cursor: "pointer" }}>clear the search</span>.
           </p>
         </div>
       )}
