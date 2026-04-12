@@ -2,45 +2,41 @@ import React, { useState } from "react";
 import { ALL_TOPICS, getVersesByTopic } from "../data/gita";
 import VerseCard from "../components/VerseCard";
 
-const TOPIC_EMOJIS = {
-  karma: "⚡", dharma: "⚖️", soul: "✨", death: "🌙",
-  action: "🎯", duty: "🛡️", detachment: "🍃", mind: "🧠",
-  meditation: "🧘", equanimity: "⚖️", discipline: "💪",
-  devotion: "🙏", surrender: "🌊", liberation: "🕊️",
-  leadership: "👑", compassion: "💝", ego: "🪞",
-  grief: "💔", war: "⚔️", yoga: "🌀", faith: "🕯️",
-  divine: "🌟", eternity: "♾️", suffering: "😮‍💨",
-};
-
 export default function Explore() {
   const [active, setActive] = useState(null);
   const results = active ? getVersesByTopic(active) : [];
 
   return (
-    <div className="page" style={{ maxWidth: "900px", margin: "0 auto", padding: "3rem 2rem" }}>
+    <div className="min-h-screen pt-16 max-w-[850px] mx-auto px-6 py-10">
       {/* Header */}
-      <div style={{ textAlign: "center", marginBottom: "3rem", animation: "fadeInUp 0.5s ease" }}>
-        <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🌿</div>
-        <h1 style={{ fontSize: "2.2rem", marginBottom: "0.75rem" }}>Explore by Topic</h1>
-        <p style={{ color: "var(--color-muted)", maxWidth: "460px", margin: "0 auto", lineHeight: 1.8 }}>
-          Dive deep into the Gita's teachings by choosing a theme that speaks to you.
+      <div
+        className="text-center mb-10"
+        style={{ animation: "fadeInUp 0.5s ease" }}
+      >
+        <h1 className="font-['Cormorant_Garamond',serif] text-3xl font-semibold text-[#2D2A26] mb-3">
+          Explore by Topic
+        </h1>
+        <p className="text-[#8A8580] max-w-[420px] mx-auto leading-relaxed">
+          Dive deep into the Gita&apos;s teachings by choosing a theme that speaks to you.
         </p>
       </div>
 
       {/* Topic cloud */}
-      <div style={{
-        display: "flex", flexWrap: "wrap", gap: "0.6rem",
-        justifyContent: "center", marginBottom: "3rem",
-        animation: "fadeInUp 0.5s ease 0.1s backwards",
-      }}>
-        {ALL_TOPICS.map(topic => (
+      <div
+        className="flex flex-wrap gap-2 justify-center mb-10"
+        style={{ animation: "fadeInUp 0.5s ease 0.1s backwards" }}
+      >
+        {ALL_TOPICS.map((topic) => (
           <button
             key={topic}
-            className={`tag${active === topic ? " active" : ""}`}
-            style={{ fontSize: "0.85rem", padding: "0.5rem 1.1rem" }}
+            className={`text-sm px-4 py-2 rounded-full border cursor-pointer transition-all duration-200 ${
+              active === topic
+                ? "bg-[#B8860B] text-white border-[#B8860B] font-semibold"
+                : "bg-white text-[#6B6560] border-[#E8E4DF] hover:bg-[#F3F0EB] hover:border-[#D4C9BC] hover:text-[#2D2A26]"
+            }`}
             onClick={() => setActive(active === topic ? null : topic)}
           >
-            {TOPIC_EMOJIS[topic] || "•"} {topic.charAt(0).toUpperCase() + topic.slice(1)}
+            {topic.charAt(0).toUpperCase() + topic.slice(1)}
           </button>
         ))}
       </div>
@@ -48,20 +44,22 @@ export default function Explore() {
       {/* Results */}
       {active && (
         <div style={{ animation: "fadeInUp 0.4s ease" }}>
-          <h2 style={{ fontSize: "1.3rem", marginBottom: "0.5rem", textTransform: "capitalize" }}>
-            {TOPIC_EMOJIS[active] || "•"} {active}
+          <h2 className="font-['Cormorant_Garamond',serif] text-xl font-semibold text-[#2D2A26] mb-1 capitalize">
+            {active}
           </h2>
-          <p style={{ color: "var(--color-muted)", fontSize: "0.875rem", marginBottom: "1.5rem" }}>
+          <p className="text-[#8A8580] text-sm mb-5">
             {results.length} {results.length === 1 ? "verse" : "verses"} on this topic
           </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            {results.map(v => <VerseCard key={`${v.chapter}-${v.verse}`} verse={v} />)}
+          <div className="flex flex-col gap-3">
+            {results.map((v) => (
+              <VerseCard key={`${v.chapter}-${v.verse}`} verse={v} />
+            ))}
           </div>
         </div>
       )}
 
       {!active && (
-        <p style={{ textAlign: "center", color: "var(--color-muted)" }}>
+        <p className="text-center text-[#8A8580]">
           Select a topic above to see related verses ↑
         </p>
       )}
