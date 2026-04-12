@@ -6,9 +6,8 @@ export default function Daily() {
   const navigate = useNavigate();
   const daily = getDailyVerse();
 
-  // Get a few more recent "daily" verses for context
   const dayIndex = VERSES.findIndex(
-    (v) => v.chapter === daily.chapter && v.verse === daily.verse,
+    (v) => v.chapter === daily.chapter && v.verse === daily.verse
   );
   const recent = [
     VERSES[(dayIndex - 1 + VERSES.length) % VERSES.length],
@@ -16,23 +15,16 @@ export default function Daily() {
   ].filter((v) => v.verse !== daily.verse);
 
   return (
-    <div
-      className="page"
-      style={{ maxWidth: "750px", margin: "0 auto", padding: "3rem 2rem" }}
-    >
+    <div className="min-h-screen pt-16 max-w-[700px] mx-auto px-6 py-10">
       {/* Header */}
       <div
-        style={{
-          textAlign: "center",
-          marginBottom: "3rem",
-          animation: "fadeInUp 0.5s ease",
-        }}
+        className="text-center mb-10"
+        style={{ animation: "fadeInUp 0.5s ease" }}
       >
-        <div style={{ fontSize: "3.5rem", marginBottom: "1rem" }}>☀️</div>
-        <h1 style={{ fontSize: "2.2rem", marginBottom: "0.5rem" }}>
+        <h1 className="font-['Cormorant_Garamond',serif] text-3xl font-semibold text-[#2D2A26] mb-2">
           Daily Wisdom
         </h1>
-        <p style={{ color: "var(--color-muted)" }}>
+        <p className="text-[#8A8580]">
           {new Date().toLocaleDateString("en-IN", {
             weekday: "long",
             year: "numeric",
@@ -42,106 +34,47 @@ export default function Daily() {
         </p>
       </div>
 
-      {/* Today's verse — big card */}
+      {/* Today's verse */}
       <div
-        className="card"
-        style={{
-          padding: "2.5rem",
-          marginBottom: "2rem",
-          textAlign: "center",
-          background:
-            "linear-gradient(145deg, rgba(229,235,131,0.08) 0%, rgba(249,178,152,0.05) 100%)",
-          animation: "fadeInUp 0.5s ease 0.1s backwards",
-        }}
+        className="bg-white border border-[#E8E4DF] rounded-2xl p-8 mb-6 text-center"
+        style={{ animation: "fadeInUp 0.5s ease 0.1s backwards" }}
       >
-        <div
-          style={{
-            display: "inline-flex",
-            padding: "0.4rem 1rem",
-            background: "var(--grad-gold)",
-            borderRadius: "99px",
-            color: "#000",
-            fontWeight: 600,
-            fontSize: "0.8rem",
-            marginBottom: "1.5rem",
-          }}
-        >
-          ✨ Today's Verse
-        </div>
+        <span className="inline-flex py-1 px-4 bg-[#B8860B] text-white rounded-full text-xs font-semibold mb-5">
+          ✦ Today&apos;s Verse
+        </span>
 
-        <p
-          className="sanskrit"
-          style={{
-            fontSize: "1.1rem",
-            lineHeight: 2.2,
-            marginBottom: "1.5rem",
-          }}
-        >
+        <p className="font-['Tiro_Devanagari_Sanskrit',serif] text-base leading-[2.2] text-[#6B4E2F] mb-5">
           {daily.sanskrit}
         </p>
 
-        <div className="divider" />
+        {/* Divider */}
+        <div className="h-px bg-[#E8E4DF] my-5" />
 
-        <p
-          style={{
-            fontSize: "1.1rem",
-            lineHeight: 1.9,
-            color: "var(--color-cream)",
-            marginBottom: "1.5rem",
-          }}
-        >
-          "{daily.translation}"
+        <p className="text-lg leading-[1.9] text-[#2D2A26] mb-4">
+          &quot;{daily.translation}&quot;
         </p>
 
-        <p
-          style={{
-            color: "var(--color-muted)",
-            fontSize: "0.875rem",
-            marginBottom: "2rem",
-          }}
-        >
+        <p className="text-[#8A8580] text-sm mb-6">
           — Bhagavad Gita {daily.chapter}.{daily.verse}
         </p>
 
         {daily.commentary && (
-          <div
-            style={{
-              padding: "1.25rem",
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid var(--color-border)",
-              borderRadius: "var(--radius-md)",
-              textAlign: "left",
-              marginBottom: "1.5rem",
-            }}
-          >
-            <p
-              style={{
-                color: "var(--color-muted)",
-                fontSize: "0.9rem",
-                lineHeight: 1.8,
-              }}
-            >
+          <div className="p-4 bg-[#FAF8F5] border border-[#E8E4DF] rounded-xl text-left mb-5">
+            <p className="text-[#8A8580] text-sm leading-[1.8]">
               💡 {daily.commentary}
             </p>
           </div>
         )}
 
-        <div
-          style={{
-            display: "flex",
-            gap: "0.75rem",
-            justifyContent: "center",
-            flexWrap: "wrap",
-          }}
-        >
+        <div className="flex gap-2.5 justify-center flex-wrap">
           <button
-            className="btn-primary"
+            className="bg-[#B8860B] text-white font-medium py-2.5 px-6 rounded-full border-none cursor-pointer transition-all duration-300 hover:bg-[#9A7209] text-sm"
             onClick={() => navigate(`/verse/${daily.chapter}/${daily.verse}`)}
           >
-            ✨ Explore & Ask AI
+            ✦ Explore & Ask AI
           </button>
           <button
-            className="btn-ghost"
+            className="bg-transparent text-[#8A8580] py-2.5 px-5 rounded-full border border-[#E8E4DF] cursor-pointer transition-all duration-300 hover:bg-[#F0EDE8] hover:text-[#2D2A26] text-sm"
             onClick={() => {
               const text = `"${daily.translation}" — Bhagavad Gita ${daily.chapter}.${daily.verse}`;
               navigator.clipboard?.writeText(text);
@@ -152,34 +85,18 @@ export default function Daily() {
         </div>
       </div>
 
-      {/* Reflection prompt */}
+      {/* Reflection */}
       <div
-        className="card"
-        style={{
-          padding: "1.75rem",
-          marginBottom: "2rem",
-          animation: "fadeInUp 0.5s ease 0.2s backwards",
-        }}
+        className="bg-white border border-[#E8E4DF] rounded-xl p-5 mb-6"
+        style={{ animation: "fadeInUp 0.5s ease 0.2s backwards" }}
       >
-        <h3
-          style={{
-            fontSize: "1rem",
-            marginBottom: "0.75rem",
-            color: "var(--color-cream)",
-          }}
-        >
-          🧘 Today's Reflection
+        <h3 className="font-['Cormorant_Garamond',serif] text-base font-semibold text-[#2D2A26] mb-2">
+          🧘 Today&apos;s Reflection
         </h3>
-        <p
-          style={{
-            color: "var(--color-muted)",
-            lineHeight: 1.8,
-            fontSize: "0.95rem",
-          }}
-        >
+        <p className="text-[#8A8580] leading-[1.8] text-sm">
           Sit quietly for a moment. Read the verse again. Ask yourself:{" "}
-          <em style={{ color: "var(--color-text)" }}>
-            "Where in my life today can I apply this teaching?"
+          <em className="text-[#2D2A26]">
+            &quot;Where in my life today can I apply this teaching?&quot;
           </em>
         </p>
       </div>
@@ -187,32 +104,20 @@ export default function Daily() {
       {/* Recent verses */}
       {recent.length > 0 && (
         <div style={{ animation: "fadeInUp 0.5s ease 0.3s backwards" }}>
-          <h2 style={{ fontSize: "1.2rem", marginBottom: "1.25rem" }}>
+          <h2 className="font-['Cormorant_Garamond',serif] text-lg font-semibold text-[#2D2A26] mb-4">
             Recent Verses
           </h2>
           {recent.map((v) => (
             <div
               key={`${v.chapter}-${v.verse}`}
-              className="card"
-              style={{
-                padding: "1.25rem",
-                marginBottom: "0.75rem",
-                cursor: "pointer",
-              }}
+              className="bg-white border border-[#E8E4DF] rounded-xl p-4 mb-2.5 cursor-pointer transition-all duration-300 hover:border-[#D4C9BC] hover:shadow-[0_4px_20px_rgba(0,0,0,0.04)]"
               onClick={() => navigate(`/verse/${v.chapter}/${v.verse}`)}
             >
-              <span className="tag" style={{ marginBottom: "0.5rem" }}>
+              <span className="text-[0.65rem] tracking-wider uppercase text-[#B8860B]/70 bg-[#B8860B]/6 border border-[#B8860B]/12 rounded-full px-2 py-0.5 mb-2 inline-block">
                 Ch {v.chapter} · V {v.verse}
               </span>
-              <p
-                style={{
-                  color: "var(--color-text)",
-                  fontSize: "0.9rem",
-                  lineHeight: 1.7,
-                  marginTop: "0.5rem",
-                }}
-              >
-                "{v.translation.slice(0, 120)}..."
+              <p className="text-[#2D2A26] text-sm leading-relaxed mt-1.5">
+                &quot;{v.translation.slice(0, 120)}...&quot;
               </p>
             </div>
           ))}
