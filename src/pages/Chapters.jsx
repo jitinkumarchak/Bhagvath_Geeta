@@ -6,97 +6,77 @@ export default function Chapters() {
   const navigate = useNavigate();
 
   return (
-    <div className="page" style={{ maxWidth: "1100px", margin: "0 auto", padding: "3rem 2rem" }}>
+    <div className="min-h-screen pt-16 max-w-[1000px] mx-auto px-6 py-10">
       {/* Header */}
-      <div style={{ textAlign: "center", marginBottom: "3rem", animation: "fadeInUp 0.5s ease" }}>
-        <div className="anim-float" style={{ fontSize: "3rem", marginBottom: "1.2rem", display: "inline-block" }}>📖</div>
-        <h1 style={{ fontSize: "2.5rem", marginBottom: "0.75rem" }}>The Bhagavad Gita</h1>
-        <p style={{ color: "var(--color-muted)", maxWidth: "500px", margin: "0 auto", lineHeight: 1.8 }}>
+      <div
+        className="text-center mb-10"
+        style={{ animation: "fadeInUp 0.5s ease" }}
+      >
+        <h1 className="font-['Cormorant_Garamond',serif] text-4xl font-semibold text-[#2D2A26] mb-3">
+          The Bhagavad Gita
+        </h1>
+        <p className="text-[#8A8580] max-w-[460px] mx-auto leading-relaxed">
           18 chapters · 700 verses · The eternal dialogue between Arjuna and Krishna
         </p>
       </div>
 
-      {/* Stats bar */}
-      <div style={{
-        display: "flex", justifyContent: "center", gap: "3rem",
-        marginBottom: "3rem", flexWrap: "wrap",
-      }}>
+      {/* Stats */}
+      <div className="flex justify-center gap-12 mb-10 flex-wrap">
         {[
           { label: "Chapters", value: "18" },
-          { label: "Verses",   value: "700" },
-          { label: "Yogas",    value: "18" },
-        ].map(s => (
-          <div key={s.label} style={{ textAlign: "center" }}>
-            <div style={{
-              fontSize: "2rem", fontWeight: 700, fontFamily: "var(--font-display)",
-              background: "var(--grad-gold)",
-              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-            }}>{s.value}</div>
-            <div style={{ color: "var(--color-muted)", fontSize: "0.85rem" }}>{s.label}</div>
+          { label: "Verses", value: "700" },
+          { label: "Yogas", value: "18" },
+        ].map((s) => (
+          <div key={s.label} className="text-center">
+            <div className="text-2xl font-bold font-['Cormorant_Garamond',serif] text-[#B8860B]">
+              {s.value}
+            </div>
+            <div className="text-[#8A8580] text-sm">{s.label}</div>
           </div>
         ))}
       </div>
+
       {/* 3D Book CTA */}
-      <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
+      <div className="text-center mb-8">
         <button
-          className="btn-primary"
-          style={{ fontSize: "1rem", padding: "0.75rem 2.2rem" }}
+          className="bg-[#B8860B] text-white font-medium text-sm py-2.5 px-6 rounded-full border-none cursor-pointer transition-all duration-300 hover:bg-[#9A7209] hover:shadow-[0_4px_20px_rgba(184,134,11,0.2)]"
           onClick={() => navigate("/book")}
         >
           📚 Read as 3D Book
         </button>
-        <p style={{ color: "var(--color-muted)", fontSize: "0.8rem", marginTop: "0.5rem" }}>
+        <p className="text-[#8A8580] text-xs mt-2">
           Flip pages like a real book
         </p>
       </div>
 
       {/* Chapters grid */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-        gap: "1rem",
-      }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {CHAPTERS.map((ch, i) => (
           <div
             key={ch.id}
-            className="card"
-            style={{
-              padding: "1.5rem",
-              cursor: "pointer",
-              animation: `fadeInUp 0.4s ease ${i * 0.04}s backwards`,
-            }}
+            className="bg-white border border-[#E8E4DF] rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-[#D4C9BC] hover:shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:-translate-y-0.5"
+            style={{ animation: `fadeInUp 0.4s ease ${i * 0.03}s backwards` }}
             onClick={() => navigate(`/chapter/${ch.id}`)}
           >
-            <div style={{ display: "flex", alignItems: "flex-start", gap: "1rem" }}>
-              {/* Chapter number badge */}
-              <div style={{
-                minWidth: "44px", height: "44px",
-                borderRadius: "var(--radius-sm)",
-                background: `${ch.color}18`,
-                border: `1px solid ${ch.color}44`,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontFamily: "var(--font-display)", fontWeight: 700,
-                fontSize: "1.1rem", color: ch.color,
-                flexShrink: 0,
-              }}>
+            <div className="flex items-start gap-3">
+              {/* Chapter number */}
+              <div className="min-w-[40px] h-10 rounded-lg bg-[#B8860B]/8 border border-[#B8860B]/15 flex items-center justify-center font-['Cormorant_Garamond',serif] font-bold text-base text-[#B8860B] shrink-0">
                 {ch.id}
               </div>
 
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <h3 style={{
-                  fontFamily: "var(--font-display)", fontSize: "0.95rem",
-                  color: "var(--color-cream)", marginBottom: "0.2rem",
-                  whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
-                }}>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-['Cormorant_Garamond',serif] text-sm font-semibold text-[#2D2A26] mb-0.5 whitespace-nowrap overflow-hidden text-ellipsis">
                   {ch.name}
                 </h3>
-                <p className="sanskrit" style={{ fontSize: "0.8rem", margin: "0 0 0.4rem" }}>
+                <p className="font-['Tiro_Devanagari_Sanskrit',serif] text-xs text-[#B8860B]/60 mb-1">
                   {ch.sanskrit}
                 </p>
-                <p style={{ color: "var(--color-muted)", fontSize: "0.8rem", marginBottom: "0.6rem" }}>
+                <p className="text-[#8A8580] text-xs mb-2">
                   {ch.meaning}
                 </p>
-                <span className="tag" style={{ fontSize: "0.7rem" }}>{ch.verses} verses</span>
+                <span className="text-[0.65rem] tracking-wider uppercase text-[#B8860B]/70 bg-[#B8860B]/6 border border-[#B8860B]/12 rounded-full px-2 py-0.5">
+                  {ch.verses} verses
+                </span>
               </div>
             </div>
           </div>

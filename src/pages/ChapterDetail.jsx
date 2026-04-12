@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getChapter, getVersesByChapter, VERSES } from "../data/gita";
+import { getChapter, getVersesByChapter } from "../data/gita";
 
 export default function ChapterDetail() {
   const { id } = useParams();
@@ -8,63 +8,80 @@ export default function ChapterDetail() {
   const chapter = getChapter(id);
   const verses = getVersesByChapter(id);
 
-  // Build full verse list (numbers only for ones without data)
   const totalVerses = chapter?.verses || 0;
   const verseNums = Array.from({ length: totalVerses }, (_, i) => i + 1);
 
-  if (!chapter) return (
-    <div className="page" style={{ textAlign: "center", padding: "4rem" }}>
-      <p style={{ color: "var(--color-muted)" }}>Chapter not found</p>
-    </div>
-  );
+  if (!chapter)
+    return (
+      <div className="min-h-screen pt-16 text-center py-16">
+        <p className="text-[#8A8580]">Chapter not found</p>
+      </div>
+    );
 
   return (
-    <div className="page" style={{ maxWidth: "900px", margin: "0 auto", padding: "3rem 2rem" }}>
+    <div className="min-h-screen pt-16 max-w-[850px] mx-auto px-6 py-10">
       {/* Back */}
       <button
         onClick={() => navigate("/chapters")}
-        style={{ background: "none", border: "none", cursor: "pointer", color: "var(--color-gold)", marginBottom: "2rem", display: "flex", alignItems: "center", gap: "0.4rem" }}
+        className="bg-transparent border-none cursor-pointer text-[#B8860B] mb-6 flex items-center gap-1 text-sm hover:underline"
       >
         ← All Chapters
       </button>
 
       {/* Chapter header */}
-      <div style={{ marginBottom: "3rem", animation: "fadeInUp 0.5s ease" }}>
-        <span className="tag" style={{ marginBottom: "1rem" }}>Chapter {chapter.id}</span>
-        <h1 style={{ fontSize: "2.2rem", margin: "0.75rem 0 0.4rem" }}>{chapter.name}</h1>
-        <p className="sanskrit" style={{ marginBottom: "0.5rem" }}>{chapter.sanskrit}</p>
-        <p style={{ color: "var(--color-muted)" }}>{chapter.meaning}</p>
-        <div style={{ marginTop: "1rem" }}>
-          <span className="tag">{chapter.verses} verses</span>
+      <div className="mb-8" style={{ animation: "fadeInUp 0.5s ease" }}>
+        <span className="text-xs tracking-wider uppercase text-[#B8860B]/70 bg-[#B8860B]/6 border border-[#B8860B]/12 rounded-full px-3 py-1">
+          Chapter {chapter.id}
+        </span>
+        <h1 className="font-['Cormorant_Garamond',serif] text-3xl font-semibold text-[#2D2A26] mt-3 mb-1">
+          {chapter.name}
+        </h1>
+        <p className="font-['Tiro_Devanagari_Sanskrit',serif] text-base text-[#B8860B]/60 mb-1">
+          {chapter.sanskrit}
+        </p>
+        <p className="text-[#8A8580]">{chapter.meaning}</p>
+        <div className="mt-3">
+          <span className="text-xs tracking-wider uppercase text-[#B8860B]/70 bg-[#B8860B]/6 border border-[#B8860B]/12 rounded-full px-3 py-1">
+            {chapter.verses} verses
+          </span>
         </div>
       </div>
 
-      <div className="divider" />
+      {/* Divider */}
+      <div className="h-px bg-[#E8E4DF] my-6" />
 
-      {/* Verses with data */}
+      {/* Key Verses */}
       {verses.length > 0 && (
-        <div style={{ marginBottom: "3rem" }}>
-          <h2 style={{ fontSize: "1.3rem", marginBottom: "1.5rem", color: "var(--color-cream)" }}>
-            ✨ Key Verses
+        <div className="mb-10">
+          <h2 className="font-['Cormorant_Garamond',serif] text-xl font-semibold text-[#2D2A26] mb-5">
+            Key Verses
           </h2>
-          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            {verses.map(verse => (
+          <div className="flex flex-col gap-3">
+            {verses.map((verse) => (
               <div
                 key={verse.verse}
-                className="card"
-                style={{ padding: "1.5rem", cursor: "pointer" }}
-                onClick={() => navigate(`/verse/${chapter.id}/${verse.verse}`)}
+                className="bg-white border border-[#E8E4DF] rounded-xl p-5 cursor-pointer transition-all duration-300 hover:border-[#D4C9BC] hover:shadow-[0_4px_20px_rgba(0,0,0,0.04)]"
+                onClick={() =>
+                  navigate(`/verse/${chapter.id}/${verse.verse}`)
+                }
               >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.75rem" }}>
-                  <span className="tag">Verse {verse.verse}</span>
-                  <span style={{ color: "var(--color-muted)", fontSize: "0.8rem" }}>Read →</span>
+                <div className="flex justify-between items-start mb-3">
+                  <span className="text-xs tracking-wider uppercase text-[#B8860B]/70 bg-[#B8860B]/6 border border-[#B8860B]/12 rounded-full px-2.5 py-0.5">
+                    Verse {verse.verse}
+                  </span>
+                  <span className="text-[#8A8580] text-xs">Read →</span>
                 </div>
-                <p style={{ color: "var(--color-text)", lineHeight: 1.7, fontSize: "0.95rem" }}>
-                  "{verse.translation.slice(0, 160)}..."
+                <p className="text-[#2D2A26] leading-relaxed text-sm">
+                  &quot;{verse.translation.slice(0, 160)}...&quot;
                 </p>
-                <div style={{ marginTop: "0.75rem", display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
-                  {verse.topics.slice(0, 3).map(t => (
-                    <span key={t} className="tag" style={{ fontSize: "0.7rem" }}>{t}</span>
+                <div className="mt-3 flex gap-1.5 flex-wrap">
+                  {verse.topics.slice(0, 3).map((t) => (
+                    <span
+                      key={t}
+                      className="text-[0.6rem] tracking-wider uppercase text-[#B8860B]/70 bg-[#B8860B]/6 border border-[#B8860B]/12 rounded-full px-2 py-0.5"
+                    >
+                      {t}
+                    </span>
                   ))}
                 </div>
               </div>
@@ -75,41 +92,31 @@ export default function ChapterDetail() {
 
       {/* All verse numbers */}
       <div>
-        <h2 style={{ fontSize: "1.3rem", marginBottom: "1.5rem", color: "var(--color-cream)" }}>
+        <h2 className="font-['Cormorant_Garamond',serif] text-xl font-semibold text-[#2D2A26] mb-5">
           All Verses
         </h2>
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(64px, 1fr))",
-          gap: "0.6rem",
-        }}>
-          {verseNums.map(n => {
-            const hasData = verses.some(v => v.verse === n);
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(56px,1fr))] gap-2">
+          {verseNums.map((n) => {
+            const hasData = verses.some((v) => v.verse === n);
             return (
               <button
                 key={n}
-                onClick={() => hasData && navigate(`/verse/${chapter.id}/${n}`)}
-                style={{
-                  padding: "0.6rem",
-                  borderRadius: "var(--radius-sm)",
-                  border: hasData ? "1px solid var(--color-border-hover)" : "1px solid var(--color-border)",
-                  background: hasData ? "rgba(229,235,131,0.07)" : "var(--color-surface2)",
-                  color: hasData ? "var(--color-gold)" : "var(--color-muted)",
-                  cursor: hasData ? "pointer" : "default",
-                  fontWeight: hasData ? 600 : 400,
-                  fontSize: "0.85rem",
-                  transition: "all 0.2s",
-                }}
-                onMouseEnter={e => hasData && (e.currentTarget.style.background = "rgba(229,235,131,0.15)")}
-                onMouseLeave={e => hasData && (e.currentTarget.style.background = "rgba(229,235,131,0.07)")}
+                onClick={() =>
+                  hasData && navigate(`/verse/${chapter.id}/${n}`)
+                }
+                className={`py-2 rounded-lg text-sm transition-all duration-200 border ${
+                  hasData
+                    ? "border-[#B8860B]/25 bg-[#B8860B]/6 text-[#B8860B] font-semibold cursor-pointer hover:bg-[#B8860B]/12"
+                    : "border-[#E8E4DF] bg-[#F3F0EB] text-[#B8ADA0] cursor-default"
+                }`}
               >
                 {n}
               </button>
             );
           })}
         </div>
-        <p style={{ color: "var(--color-muted)", fontSize: "0.8rem", marginTop: "1rem" }}>
-          ✨ Highlighted verses have full AI explanations available
+        <p className="text-[#8A8580] text-xs mt-3">
+          ✦ Highlighted verses have full AI explanations available
         </p>
       </div>
     </div>
