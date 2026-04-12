@@ -10,47 +10,44 @@ export default function LifeGuide() {
   const results = selected ? getVersesByEmotion(selected.key) : [];
 
   return (
-    <div className="page" style={{ maxWidth: "900px", margin: "0 auto", padding: "3rem 2rem" }}>
+    <div className="min-h-screen pt-16 max-w-[850px] mx-auto px-6 py-10">
       {/* Header */}
-      <div style={{ textAlign: "center", marginBottom: "3rem", animation: "fadeInUp 0.5s ease" }}>
-        <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🧭</div>
-        <h1 style={{ fontSize: "2.2rem", marginBottom: "0.75rem" }}>Life Guidance</h1>
-        <p style={{ color: "var(--color-muted)", maxWidth: "480px", margin: "0 auto", lineHeight: 1.8 }}>
-          What are you going through right now? Choose your situation and receive Gita wisdom tailored for you.
+      <div
+        className="text-center mb-10"
+        style={{ animation: "fadeInUp 0.5s ease" }}
+      >
+        <h1 className="font-['Cormorant_Garamond',serif] text-3xl font-semibold text-[#2D2A26] mb-3">
+          Life Guidance
+        </h1>
+        <p className="text-[#8A8580] max-w-[440px] mx-auto leading-relaxed">
+          What are you going through right now? Choose your situation and
+          receive Gita wisdom tailored for you.
         </p>
       </div>
 
       {/* Emotion grid */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
-        gap: "0.75rem",
-        marginBottom: "3rem",
-        animation: "fadeInUp 0.5s ease 0.1s backwards",
-      }}>
-        {EMOTIONS.map(em => (
+      <div
+        className="grid grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-2.5 mb-10"
+        style={{ animation: "fadeInUp 0.5s ease 0.1s backwards" }}
+      >
+        {EMOTIONS.map((em) => (
           <button
             key={em.key}
-            onClick={() => setSelected(selected?.key === em.key ? null : em)}
-            style={{
-              padding: "1.1rem 0.75rem",
-              borderRadius: "var(--radius-md)",
-              border: selected?.key === em.key
-                ? "1px solid var(--color-gold)"
-                : "1px solid var(--color-border)",
-              background: selected?.key === em.key
-                ? "rgba(229,235,131,0.12)"
-                : "var(--color-surface2)",
-              color: selected?.key === em.key ? "var(--color-cream)" : "var(--color-text)",
-              cursor: "pointer",
-              transition: "all 0.2s",
-              display: "flex", flexDirection: "column", alignItems: "center",
-              gap: "0.5rem",
-              transform: selected?.key === em.key ? "scale(1.04)" : "scale(1)",
-            }}
+            onClick={() =>
+              setSelected(selected?.key === em.key ? null : em)
+            }
+            className={`py-4 px-3 rounded-xl border cursor-pointer transition-all duration-200 flex flex-col items-center gap-2 ${
+              selected?.key === em.key
+                ? "border-[#B8860B] bg-[#B8860B]/8 text-[#2D2A26] scale-[1.03]"
+                : "border-[#E8E4DF] bg-white text-[#6B6560] hover:bg-[#F3F0EB] hover:border-[#D4C9BC]"
+            }`}
           >
-            <span style={{ fontSize: "1.75rem" }}>{em.emoji}</span>
-            <span style={{ fontSize: "0.85rem", fontWeight: selected?.key === em.key ? 600 : 400 }}>
+            <span className="text-2xl">{em.emoji}</span>
+            <span
+              className={`text-sm ${
+                selected?.key === em.key ? "font-semibold" : ""
+              }`}
+            >
               {em.label}
             </span>
           </button>
@@ -60,13 +57,13 @@ export default function LifeGuide() {
       {/* Results */}
       {selected && (
         <div style={{ animation: "fadeInUp 0.4s ease" }}>
-          <div style={{ marginBottom: "1.75rem", display: "flex", alignItems: "center", gap: "0.75rem" }}>
-            <span style={{ fontSize: "1.5rem" }}>{selected.emoji}</span>
+          <div className="mb-5 flex items-center gap-3">
+            <span className="text-xl">{selected.emoji}</span>
             <div>
-              <h2 style={{ fontSize: "1.3rem", marginBottom: "0.2rem" }}>
+              <h2 className="font-['Cormorant_Garamond',serif] text-xl font-semibold text-[#2D2A26] mb-0.5">
                 For {selected.label}
               </h2>
-              <p style={{ color: "var(--color-muted)", fontSize: "0.875rem" }}>
+              <p className="text-[#8A8580] text-sm">
                 {results.length > 0
                   ? `${results.length} verse${results.length > 1 ? "s" : ""} from the Gita`
                   : "No verses matched — try the AI chat for personalized guidance"}
@@ -75,19 +72,22 @@ export default function LifeGuide() {
           </div>
 
           {results.length > 0 ? (
-            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-              {results.map(v => <VerseCard key={`${v.chapter}-${v.verse}`} verse={v} />)}
+            <div className="flex flex-col gap-3">
+              {results.map((v) => (
+                <VerseCard key={`${v.chapter}-${v.verse}`} verse={v} />
+              ))}
             </div>
           ) : (
-            <div style={{
-              textAlign: "center", padding: "3rem",
-              border: "1px dashed var(--color-border)", borderRadius: "var(--radius-xl)",
-            }}>
-              <p style={{ color: "var(--color-muted)", marginBottom: "1.5rem" }}>
-                No verses found for this situation — ask the AI for personalized Gita wisdom.
+            <div className="text-center py-10 border border-dashed border-[#E8E4DF] rounded-2xl">
+              <p className="text-[#8A8580] mb-5">
+                No verses found for this situation — ask the AI for
+                personalized Gita wisdom.
               </p>
-              <button className="btn-primary" onClick={() => navigate("/chat")}>
-                ✨ Ask the AI Teacher
+              <button
+                className="bg-[#B8860B] text-white font-medium py-2.5 px-6 rounded-full border-none cursor-pointer transition-all duration-300 hover:bg-[#9A7209] text-sm"
+                onClick={() => navigate("/chat")}
+              >
+                ✦ Ask the AI Teacher
               </button>
             </div>
           )}
@@ -96,12 +96,12 @@ export default function LifeGuide() {
 
       {/* CTA when nothing selected */}
       {!selected && (
-        <div style={{ textAlign: "center", padding: "2rem", color: "var(--color-muted)" }}>
+        <div className="text-center py-6 text-[#8A8580]">
           <p>Select a feeling above to receive guidance ↑</p>
-          <p style={{ marginTop: "1rem", fontSize: "0.875rem" }}>
+          <p className="mt-3 text-sm">
             Or{" "}
             <span
-              style={{ color: "var(--color-gold)", cursor: "pointer" }}
+              className="text-[#B8860B] cursor-pointer hover:underline"
               onClick={() => navigate("/chat")}
             >
               chat with the AI directly →
