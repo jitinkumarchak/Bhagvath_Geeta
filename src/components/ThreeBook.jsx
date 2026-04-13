@@ -34,12 +34,11 @@ const MAX_THICKNESS = 0.25;
 //
 // 💡 To make HTML content appear LARGER on the page, INCREASE the zoom below.
 // This works by reducing the virtual canvas size, making pixels proportionally bigger.
-const CONTENT_ZOOM = 1.6; 
+const CONTENT_ZOOM = 2.0; 
 const CSS_WIDTH = Math.round(1024 / CONTENT_ZOOM);
 const CSS_HEIGHT = Math.round(CSS_WIDTH * (PAGE_HEIGHT / PAGE_WIDTH)); 
-// R3F Drei Html uses a baseline CSS3D resolution mapping. The constant 126.5 perfectly
-// maps the 4.1 world units to the perspective-projected screen width for this camera's depth.
-const HTML_SCALE = (PAGE_WIDTH / CSS_WIDTH) * 126.5;
+// Scale strictly enforces that the CSS dimensions fit precisely within the 3D grid
+const HTML_SCALE = PAGE_WIDTH / CSS_WIDTH;
 
 // Export these so parent components that pass renderPageFunc can size their
 // page content correctly — all content must be laid out at CSS_WIDTH × CSS_HEIGHT.
