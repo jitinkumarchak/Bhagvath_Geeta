@@ -11,10 +11,10 @@ import {
 import * as THREE from 'three';
 
 // ─── Layout constants ────────────────────────────────────────────────────────
-const PAGE_WIDTH      = 4.1;
-const PAGE_HEIGHT     = 5.6;
-const SPINE_GAP       = 0.08;
-const MAX_THICKNESS   = 0.25;
+const PAGE_WIDTH = 4.1;
+const PAGE_HEIGHT = 5.6;
+const SPINE_GAP = 0.08;
+const MAX_THICKNESS = 0.25;
 
 // ── HTML portal sizing ───────────────────────────────────────────────────────
 // The <Html transform> component in @react-three/drei renders a DOM element
@@ -31,9 +31,15 @@ const MAX_THICKNESS   = 0.25;
 // HTML_SCALE = PAGE_WIDTH / CSS_WIDTH
 //   This tells drei "shrink my N-px-wide canvas to PAGE_WIDTH world units".
 //   At 1024px wide the text reads at ~18px effective, which is comfortable.
-const CSS_WIDTH       = 1024;
-const CSS_HEIGHT      = Math.round(1024 * (PAGE_HEIGHT / PAGE_WIDTH)); // ≈1398px
-const HTML_SCALE      = PAGE_WIDTH / CSS_WIDTH;                        // ≈0.004
+//
+// 💡 To make HTML content appear LARGER on the page, INCREASE the zoom below.
+// This works by reducing the virtual canvas size, making pixels proportionally bigger.
+const CONTENT_ZOOM = 1.6; 
+const CSS_WIDTH = Math.round(1024 / CONTENT_ZOOM);
+const CSS_HEIGHT = Math.round(CSS_WIDTH * (PAGE_HEIGHT / PAGE_WIDTH)); 
+// R3F Drei Html uses a baseline CSS3D resolution mapping. The constant 126.5 perfectly
+// maps the 4.1 world units to the perspective-projected screen width for this camera's depth.
+const HTML_SCALE = (PAGE_WIDTH / CSS_WIDTH) * 126.5;
 
 // Export these so parent components that pass renderPageFunc can size their
 // page content correctly — all content must be laid out at CSS_WIDTH × CSS_HEIGHT.
@@ -41,18 +47,18 @@ export { CSS_WIDTH, CSS_HEIGHT };
 
 // ─── Sacred Palette ──────────────────────────────────────────────────────────
 // Inspired by aged temple manuscripts: deep sandalwood, ivory parchment, antique gold
-const COVER_COLOR      = '#2C1810'; // deep umber — warm, grounded, not harsh
-const COVER_ACCENT     = '#8B6914'; // antique gold for spine details
-const PAPER_COLOR      = '#FBF5E6'; // warm ivory, like hand-pressed paper
+const COVER_COLOR = '#2C1810'; // deep umber — warm, grounded, not harsh
+const COVER_ACCENT = '#8B6914'; // antique gold for spine details
+const PAPER_COLOR = '#FBF5E6'; // warm ivory, like hand-pressed paper
 const PAPER_EDGE_COLOR = '#DDD0B0'; // aged parchment edge
-const SPINE_COLOR      = '#1E1008'; // darkest umber for the spine fold
+const SPINE_COLOR = '#1E1008'; // darkest umber for the spine fold
 
 
 // ─── Page content wrapper with sacred styling ────────────────────────────────
 // CSS_WIDTH is 1024px — all font sizes / padding scaled up ~2.5×.
 // Html portal shrinks everything back via HTML_SCALE so it fits the 3D mesh.
 const pageStyle = {
-  width:  CSS_WIDTH,
+  width: CSS_WIDTH,
   height: CSS_HEIGHT,
   background: 'transparent',
   userSelect: 'none',
@@ -69,19 +75,19 @@ const pageStyle = {
 // Decorative corner flourish — sizes scaled for 1024px canvas
 function CornerMark({ corner }) {
   const pos = {
-    topLeft:     { top: 18, left: 18 },
-    topRight:    { top: 18, right: 18 },
-    bottomLeft:  { bottom: 18, left: 18 },
+    topLeft: { top: 18, left: 18 },
+    topRight: { top: 18, right: 18 },
+    bottomLeft: { bottom: 18, left: 18 },
     bottomRight: { bottom: 18, right: 18 },
   }[corner];
   return (
     <div style={{
       position: 'absolute', ...pos,
       width: 32, height: 32,
-      borderTop:    corner.startsWith('top')    ? '2px solid rgba(139,105,20,0.45)' : 'none',
+      borderTop: corner.startsWith('top') ? '2px solid rgba(139,105,20,0.45)' : 'none',
       borderBottom: corner.startsWith('bottom') ? '2px solid rgba(139,105,20,0.45)' : 'none',
-      borderLeft:   corner.endsWith('Left')     ? '2px solid rgba(139,105,20,0.45)' : 'none',
-      borderRight:  corner.endsWith('Right')    ? '2px solid rgba(139,105,20,0.45)' : 'none',
+      borderLeft: corner.endsWith('Left') ? '2px solid rgba(139,105,20,0.45)' : 'none',
+      borderRight: corner.endsWith('Right') ? '2px solid rgba(139,105,20,0.45)' : 'none',
     }} />
   );
 }
@@ -102,7 +108,7 @@ function DefaultPageContent({ page, index }) {
   if (!page) return (
     <div style={pageStyle}>
       <PageBorder />
-      {['topLeft','topRight','bottomLeft','bottomRight'].map(c => <CornerMark key={c} corner={c} />)}
+      {['topLeft', 'topRight', 'bottomLeft', 'bottomRight'].map(c => <CornerMark key={c} corner={c} />)}
     </div>
   );
 
@@ -111,7 +117,7 @@ function DefaultPageContent({ page, index }) {
   if (isCover) return (
     <div style={{ ...pageStyle, alignItems: 'center', justifyContent: 'center', gap: 0 }}>
       <PageBorder />
-      {['topLeft','topRight','bottomLeft','bottomRight'].map(c => <CornerMark key={c} corner={c} />)}
+      {['topLeft', 'topRight', 'bottomLeft', 'bottomRight'].map(c => <CornerMark key={c} corner={c} />)}
 
       <div style={{
         fontSize: 92, color: '#8B6914', marginBottom: 32,
@@ -126,7 +132,7 @@ function DefaultPageContent({ page, index }) {
         color: '#1E0F04', letterSpacing: '0.18em',
         textAlign: 'center', lineHeight: 1.5,
         marginBottom: 20,
-      }}>BHAGAVAD<br/>GITA</div>
+      }}>BHAGAVAD<br />GITA</div>
 
       <div style={{
         fontSize: 24, letterSpacing: '0.22em',
@@ -152,7 +158,7 @@ function DefaultPageContent({ page, index }) {
   return (
     <div style={pageStyle}>
       <PageBorder />
-      {['topLeft','topRight','bottomLeft','bottomRight'].map(c => <CornerMark key={c} corner={c} />)}
+      {['topLeft', 'topRight', 'bottomLeft', 'bottomRight'].map(c => <CornerMark key={c} corner={c} />)}
 
       <div style={{
         fontFamily: '"Cinzel", serif',
@@ -242,9 +248,9 @@ function BookPage({ position, rotation, isLeft, frontContent, backContent }) {
             transform
             scale={HTML_SCALE}
             position={[0, 0, 0.005]}
-            style={{ width: CSS_WIDTH, height: CSS_HEIGHT, overflow: 'hidden', background: 'transparent' }}
+            style={{ width: `${CSS_WIDTH}px`, height: `${CSS_HEIGHT}px`, overflow: 'hidden', background: 'transparent' }}
           >
-            <div style={{ width: CSS_WIDTH, height: CSS_HEIGHT, background: 'transparent' }}>
+            <div style={{ width: `${CSS_WIDTH}px`, height: `${CSS_HEIGHT}px`, background: 'transparent' }}>
               {frontContent}
             </div>
           </Html>
@@ -256,9 +262,9 @@ function BookPage({ position, rotation, isLeft, frontContent, backContent }) {
             scale={HTML_SCALE}
             position={[0, 0, -0.005]}
             rotation-y={Math.PI}
-            style={{ width: CSS_WIDTH, height: CSS_HEIGHT, overflow: 'hidden', background: 'transparent' }}
+            style={{ width: `${CSS_WIDTH}px`, height: `${CSS_HEIGHT}px`, overflow: 'hidden', background: 'transparent' }}
           >
-            <div style={{ width: CSS_WIDTH, height: CSS_HEIGHT, background: 'transparent' }}>
+            <div style={{ width: `${CSS_WIDTH}px`, height: `${CSS_HEIGHT}px`, background: 'transparent' }}>
               {backContent}
             </div>
           </Html>
@@ -295,8 +301,8 @@ function HardCover({ isLeft }) {
   const coverW = PAGE_WIDTH + 0.15;
   const coverH = PAGE_HEIGHT + 0.2;
   const coverD = 0.045;
-  const posZ   = -MAX_THICKNESS - coverD / 2 - 0.01;
-  const posX   = isLeft
+  const posZ = -MAX_THICKNESS - coverD / 2 - 0.01;
+  const posX = isLeft
     ? -(coverW / 2) - SPINE_GAP + 0.05
     : (coverW / 2) + SPINE_GAP - 0.05;
 
@@ -376,14 +382,14 @@ function Spine() {
 
 // ─── Particles — drifting motes of light for atmosphere ──────────────────────
 function DustMotes() {
-  const count  = 80;
-  const mesh   = useRef();
-  const clock  = useRef(0);
+  const count = 80;
+  const mesh = useRef();
+  const clock = useRef(0);
 
   const positions = React.useMemo(() => {
     const arr = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      arr[i * 3]     = (Math.random() - 0.5) * 18;
+      arr[i * 3] = (Math.random() - 0.5) * 18;
       arr[i * 3 + 1] = (Math.random() - 0.5) * 10;
       arr[i * 3 + 2] = (Math.random() - 0.5) * 8;
     }
@@ -396,7 +402,7 @@ function DustMotes() {
     const pos = mesh.current.geometry.attributes.position.array;
     for (let i = 0; i < count; i++) {
       pos[i * 3 + 1] += Math.sin(clock.current + i * 0.7) * 0.003;
-      pos[i * 3]     += Math.cos(clock.current + i * 0.5) * 0.001;
+      pos[i * 3] += Math.cos(clock.current + i * 0.5) * 0.001;
     }
     mesh.current.geometry.attributes.position.needsUpdate = true;
   });
@@ -420,47 +426,47 @@ function DustMotes() {
 
 // ─── ThreeBook (main export) ─────────────────────────────────────────────────
 export default function ThreeBook({
-  allPages      = [],
-  spread        = 0,
-  flipping      = null,
-  flipProgress  = 0,
+  allPages = [],
+  spread = 0,
+  flipping = null,
+  flipProgress = 0,
   renderPageFunc,
 }) {
   const renderPage = renderPageFunc
     ?? ((page, index) => <DefaultPageContent page={page} index={index} />);
 
-  const totalSpreads   = Math.ceil(allPages.length / 2);
-  const leftPageIdx    = spread * 2;
-  const rightPageIdx   = spread * 2 + 1;
-  const nextLeftIdx    = (spread + 1) * 2;
-  const nextRightIdx   = (spread + 1) * 2 + 1;
-  const prevLeftIdx    = (spread - 1) * 2;
-  const prevRightIdx   = (spread - 1) * 2 + 1;
+  const totalSpreads = Math.ceil(allPages.length / 2);
+  const leftPageIdx = spread * 2;
+  const rightPageIdx = spread * 2 + 1;
+  const nextLeftIdx = (spread + 1) * 2;
+  const nextRightIdx = (spread + 1) * 2 + 1;
+  const prevLeftIdx = (spread - 1) * 2;
+  const prevRightIdx = (spread - 1) * 2 + 1;
 
-  const leftStackPerc  = spread / totalSpreads;
+  const leftStackPerc = spread / totalSpreads;
   const rightStackPerc = 1 - (spread / totalSpreads);
 
-  let staticLeftIdx  = flipping === 'prev' ? prevLeftIdx  : leftPageIdx;
+  let staticLeftIdx = flipping === 'prev' ? prevLeftIdx : leftPageIdx;
   let staticRightIdx = flipping === 'next' ? nextRightIdx : rightPageIdx;
 
-  let flipRotY      = 0;
-  let isFlipLeft    = false;
-  let flipFrontIdx  = null;
-  let flipBackIdx   = null;
-  let lift          = 0;
+  let flipRotY = 0;
+  let isFlipLeft = false;
+  let flipFrontIdx = null;
+  let flipBackIdx = null;
+  let lift = 0;
 
   if (flipping === 'next') {
-    isFlipLeft   = false;
-    flipRotY     = -(flipProgress * Math.PI);
+    isFlipLeft = false;
+    flipRotY = -(flipProgress * Math.PI);
     flipFrontIdx = rightPageIdx;
-    flipBackIdx  = nextLeftIdx;
-    lift         = Math.sin(flipProgress * Math.PI) * 0.28;
+    flipBackIdx = nextLeftIdx;
+    lift = Math.sin(flipProgress * Math.PI) * 0.28;
   } else if (flipping === 'prev') {
-    isFlipLeft   = true;
-    flipRotY     = +(flipProgress * Math.PI);
+    isFlipLeft = true;
+    flipRotY = +(flipProgress * Math.PI);
     flipFrontIdx = leftPageIdx;
-    flipBackIdx  = prevRightIdx;
-    lift         = Math.sin(flipProgress * Math.PI) * 0.28;
+    flipBackIdx = prevRightIdx;
+    lift = Math.sin(flipProgress * Math.PI) * 0.28;
   }
 
   return (
@@ -512,7 +518,7 @@ export default function ThreeBook({
             <HardCover isLeft={true} />
             <HardCover isLeft={false} />
 
-            <PageStack isLeft={true}  depth={leftStackPerc  * MAX_THICKNESS} />
+            <PageStack isLeft={true} depth={leftStackPerc * MAX_THICKNESS} />
             <PageStack isLeft={false} depth={rightStackPerc * MAX_THICKNESS} />
 
             {/* Static left page */}
@@ -538,7 +544,7 @@ export default function ThreeBook({
                 rotation={[0, flipRotY, 0]}
                 isLeft={isFlipLeft}
                 frontContent={renderPage(allPages[flipFrontIdx], flipFrontIdx)}
-                backContent={renderPage(allPages[flipBackIdx],  flipBackIdx)}
+                backContent={renderPage(allPages[flipBackIdx], flipBackIdx)}
               />
             )}
           </group>
