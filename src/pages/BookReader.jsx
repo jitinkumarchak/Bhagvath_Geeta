@@ -49,7 +49,7 @@ function CoverPage() {
   return (
     <div
       style={{
-        fontSize: "40px",
+        fontSize: "18px",
         width: "100%",
         height: "100%",
         display: "flex",
@@ -181,7 +181,7 @@ function BackCoverPage() {
   return (
     <div
       style={{
-        fontSize: "40px",
+        fontSize: "18px",
         width: "100%",
         height: "100%",
         display: "flex",
@@ -251,7 +251,7 @@ function ChapterTitlePage({ chapter }) {
   return (
     <div
       style={{
-        fontSize: "40px",
+        fontSize: "18px",
         width: "100%",
         height: "100%",
         display: "flex",
@@ -355,7 +355,7 @@ function VersePage({ page }) {
   return (
     <div
       style={{
-        fontSize: "40px",
+        fontSize: "18px",
         width: "100%",
         height: "100%",
         background: "linear-gradient(180deg, #fdf8ee 0%, #faf2e0 100%)",
@@ -535,7 +535,7 @@ function PlaceholderPage({ page }) {
   return (
     <div
       style={{
-        fontSize: "40px",
+        fontSize: "18px",
         width: "100%",
         height: "100%",
         background: "linear-gradient(180deg, #fdf8ee 0%, #faf2e0 100%)",
@@ -571,7 +571,7 @@ function BlankPage() {
   return (
     <div
       style={{
-        fontSize: "40px",
+        fontSize: "18px",
         width: "100%",
         height: "100%",
         background: "linear-gradient(180deg, #fdf8ee 0%, #faf2e0 100%)",
