@@ -97,19 +97,21 @@ export default function Home() {
             letterSpacing: "-0.01eM",
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(30px)",
-            transition: "all 1s cubic-bezier(0.22,0.61,0.36,1) 0.2s",
+            transition: "opacity 1s cubic-bezier(0.22,0.61,0.36,1) 0.2s, transform 1s cubic-bezier(0.22,0.61,0.36,1) 0.2s, color 0.3s ease",
           }}>
             Ancient Wisdom.
             <br />
             <span style={{
-              background: `linear-gradient(to right, ${c.gradientStart}, ${c.gradientEnd}, ${c.gradientStart})`,
+              backgroundImage: `linear-gradient(to right, ${c.gradientStart}, ${c.gradientEnd}, ${c.gradientStart})`,
               backgroundSize: "200% auto",
               color: "transparent",
+              WebkitTextFillColor: "transparent",
               WebkitBackgroundClip: "text",
               backgroundClip: "text",
               animation: visible ? "textGradient 6s linear infinite" : "none",
               display: "inline-block",
-              paddingTop: "8px"
+              paddingTop: "8px",
+              transition: "none"
             }}>
               Modern Clarity.
             </span>
@@ -123,7 +125,7 @@ export default function Home() {
             marginBottom: "40px",
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(20px)",
-            transition: "all 0.8s ease 0.4s",
+            transition: "opacity 0.8s ease 0.4s, transform 0.8s ease 0.4s, color 0.3s ease",
           }}>
             Explore the Bhagavad Gita with AI guidance — verse by verse,
             topic by topic, and tailored to your life.
@@ -133,7 +135,7 @@ export default function Home() {
             display: "flex", gap: "16px", flexWrap: "wrap", justifyContent: "center",
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(20px)",
-            transition: "all 0.8s ease 0.6s",
+            transition: "opacity 0.8s ease 0.6s, transform 0.8s ease 0.6s",
           }}>
             <button
               style={{
