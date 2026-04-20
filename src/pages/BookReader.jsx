@@ -781,13 +781,30 @@ export default function BookReader() {
       </div>
 
       {/* ── The 3D Book ───────────────────────────────────────────── */}
-      <ThreeBook
-        allPages={ALL_PAGES}
-        spread={spread}
-        flipping={flipping}
-        flipProgress={flipProgress}
-        renderPageFunc={renderPage}
-      />
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          /* Scale down proportionally on small screens */
+          overflowX: "hidden",
+        }}
+      >
+        <div
+          style={{
+            transform: `scale(${Math.min(1, (typeof window !== "undefined" ? window.innerWidth : 860) / 860)})`,
+            transformOrigin: "top center",
+          }}
+        >
+          <ThreeBook
+            allPages={ALL_PAGES}
+            spread={spread}
+            flipping={flipping}
+            flipProgress={flipProgress}
+            renderPageFunc={renderPage}
+          />
+        </div>
+      </div>
 
       {/* ── Navigation buttons ─────────────────────────────────── */}
       <div
