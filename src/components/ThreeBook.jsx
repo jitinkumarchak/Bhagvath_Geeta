@@ -13,9 +13,9 @@ import React from "react";
 
 /* ─── Constants ────────────────────────────────────────────────────────────── */
 const BOOK_W = 840;  // total book width  (both pages + spine)
-const BOOK_H = 580;  // book height
-const PAGE_W = 400;  // single page width
-const PAGE_H = 540;  // single page height
+const BOOK_H = 560;  // book height
+const PAGE_W = 390;  // single page width
+const PAGE_H = 520;  // single page height
 const SPINE_W = 32;  // spine width
 
 /* ─── Helpers ──────────────────────────────────────────────────────────────── */
@@ -347,8 +347,8 @@ export default function ThreeBook({
           width: ${BOOK_W}px;
           height: ${BOOK_H}px;
           /* Perspective must be on the parent, NOT the rotating element */
-          perspective: 2400px;
-          perspective-origin: 50% 45%;
+          perspective: 2200px;
+          perspective-origin: 50% 55%;
           flex-shrink: 0;
         }
         .threebook-body {
@@ -356,8 +356,8 @@ export default function ThreeBook({
           width: 100%;
           height: 100%;
           transform-style: preserve-3d;
-          /* Slight tilt for premium look */
-          transform: rotateX(4deg);
+          /* Very subtle tilt — enough for depth without clipping */
+          transform: rotateX(2deg);
           border-radius: 8px;
         }
         /* Page-edge stack on right */

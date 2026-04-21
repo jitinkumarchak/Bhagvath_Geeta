@@ -634,16 +634,17 @@ export default function BookReader() {
       setAnimating(true);
 
       const start = performance.now();
-      const duration = 900; // ms — slower for a graceful feel
+      const duration = 820; // ms — crisp but graceful
+
+      // Smooth cubic ease-in-out: no discontinuity, organic page-turn feel
+      const easeInOut = (t) => t < 0.5
+        ? 4 * t * t * t
+        : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
       const animate = (now) => {
         const elapsed = now - start;
         const t = Math.min(elapsed / duration, 1);
-        // Custom spring-like ease: gentle start, fast sweep through middle, soft landing
-        // Combination of sine and quintic for organic page-turn feel
-        const eased = t < 0.5
-          ? (1 - Math.cos(t * Math.PI)) / 2   // sine ease-in for soft lift
-          : 1 - Math.pow(1 - t, 4);            // quartic ease-out for smooth settle
+        const eased = easeInOut(t);
         setFlipProgress(eased);
 
         if (t < 1) {
@@ -789,15 +790,15 @@ export default function BookReader() {
           width: "100%",
           display: "flex",
           justifyContent: "center",
-          /* Scale down proportionally on small screens */
           overflowX: "hidden",
         }}
       >
+        {/* Responsive scale wrapper — CSS-driven, no JS reflow */}
         <div
           style={{
-            transform: `scale(${Math.min(1, (typeof window !== "undefined" ? window.innerWidth : 860) / 860)})`,
             transformOrigin: "top center",
           }}
+          className="book-scale-wrapper"
         >
           <ThreeBook
             allPages={ALL_PAGES}
@@ -902,12 +903,26 @@ export default function BookReader() {
         </button>
       </div>
 
-      {/* Mobile hint */}
+      {/* Responsive scaling — CSS-only */}
       <style>{`
-        @media (max-width: 860px) {
-          /* Scale book to fit screen */
+        .book-scale-wrapper {
+          display: flex;
+          justify-content: center;
         }
-        @media (max-width: 600px) {
+        @media (max-width: 860px) {
+          .book-scale-wrapper {
+            transform: scale(0.85);
+          }
+        }
+        @media (max-width: 700px) {
+          .book-scale-wrapper {
+            transform: scale(0.65);
+          }
+        }
+        @media (max-width: 520px) {
+          .book-scale-wrapper {
+            transform: scale(0.48);
+          }
           .book-hint { display: none; }
         }
       `}</style>
