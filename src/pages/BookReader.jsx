@@ -634,13 +634,16 @@ export default function BookReader() {
       setAnimating(true);
 
       const start = performance.now();
-      const duration = 600; // ms
+      const duration = 900; // ms — slower for a graceful feel
 
       const animate = (now) => {
         const elapsed = now - start;
         const t = Math.min(elapsed / duration, 1);
-        // Ease in-out cubic
-        const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        // Custom spring-like ease: gentle start, fast sweep through middle, soft landing
+        // Combination of sine and quintic for organic page-turn feel
+        const eased = t < 0.5
+          ? (1 - Math.cos(t * Math.PI)) / 2   // sine ease-in for soft lift
+          : 1 - Math.pow(1 - t, 4);            // quartic ease-out for smooth settle
         setFlipProgress(eased);
 
         if (t < 1) {

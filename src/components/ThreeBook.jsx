@@ -5,28 +5,29 @@
  *   allPages       — full page array
  *   spread         — current spread index (pair of pages)
  *   flipping       — "next" | "prev" | null
- *   flipProgress   — 0-1 animation progress
+ *   flipProgress   — 0-1 animation progress (eased)
  *   renderPageFunc — function(page) → JSX
  */
 
 import React from "react";
 
 /* ─── Constants ────────────────────────────────────────────────────────────── */
-const BOOK_W = 800;   // total book width (both pages)
-const BOOK_H = 560;   // book height
-const PAGE_W = 380;   // single page width
-const PAGE_H = 520;   // single page height
+const BOOK_W = 840;  // total book width  (both pages + spine)
+const BOOK_H = 580;  // book height
+const PAGE_W = 400;  // single page width
+const PAGE_H = 540;  // single page height
+const SPINE_W = 32;  // spine width
 
 /* ─── Helpers ──────────────────────────────────────────────────────────────── */
-
-/** Clamp helper */
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
-
+/* ─── Page parchment texture background ───────────────────────────────────── */
+const PARCHMENT = "linear-gradient(160deg, #fdf9f0 0%, #f9f2df 50%, #f5ead0 100%)";
+const PARCHMENT_DARK = "linear-gradient(160deg, #f5ead0 0%, #efdfc0 100%)";
 
 /* ─── Sub-components ───────────────────────────────────────────────────────── */
 
-/** Thin book spine */
+/** Book spine */
 function Spine() {
   return (
     <div
@@ -35,27 +36,31 @@ function Spine() {
         left: "50%",
         top: "50%",
         transform: "translate(-50%, -50%)",
-        width: "28px",
-        height: PAGE_H + 20,
+        width: SPINE_W,
+        height: PAGE_H + 16,
         background:
-          "linear-gradient(180deg, #3a2200 0%, #6b3a00 20%, #8b5500 50%, #6b3a00 80%, #3a2200 100%)",
-        zIndex: 20,
-        boxShadow: "2px 0 12px rgba(0,0,0,0.6), -2px 0 12px rgba(0,0,0,0.6)",
+          "linear-gradient(180deg, #2c1800 0%, #5a3000 15%, #7a4800 30%, #9a6020 50%, #7a4800 70%, #5a3000 85%, #2c1800 100%)",
+        zIndex: 25,
+        boxShadow:
+          "3px 0 16px rgba(0,0,0,0.65), -3px 0 16px rgba(0,0,0,0.65), inset 0 0 10px rgba(0,0,0,0.3)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
-        gap: "6px",
+        justifyContent: "space-around",
+        paddingTop: "20px",
+        paddingBottom: "20px",
       }}
     >
-      {/* Spine gold lines */}
-      {[0.2, 0.5, 0.8].map((p) => (
+      {[0, 1, 2, 3, 4].map((i) => (
         <div
-          key={p}
+          key={i}
           style={{
-            width: "6px",
+            width: i === 2 ? "12px" : "8px",
             height: "1px",
-            background: "rgba(245,200,60,0.6)",
+            background:
+              i === 2
+                ? "rgba(245,200,60,0.8)"
+                : "rgba(245,200,60,0.35)",
           }}
         />
       ))}
@@ -63,7 +68,7 @@ function Spine() {
   );
 }
 
-/** A static page surface */
+/** A static page surface — properly placed relative to spine */
 function PageSurface({ children, side = "left", style = {} }) {
   const isLeft = side === "left";
   return (
@@ -71,43 +76,45 @@ function PageSurface({ children, side = "left", style = {} }) {
       style={{
         position: "absolute",
         top: "50%",
-        [isLeft ? "right" : "left"]: "50%",
-        transform: `translateY(-50%)`,
+        ...(isLeft
+          ? { right: "50%", marginRight: SPINE_W / 2 }
+          : { left: "50%", marginLeft: SPINE_W / 2 }),
+        transform: "translateY(-50%)",
         width: PAGE_W,
         height: PAGE_H,
-        background: "linear-gradient(180deg, #fdf8ee 0%, #faf2e0 100%)",
-        borderRadius: isLeft ? "4px 0 0 4px" : "0 4px 4px 0",
+        background: PARCHMENT,
+        borderRadius: isLeft ? "6px 0 0 6px" : "0 6px 6px 0",
         overflow: "hidden",
         boxShadow: isLeft
-          ? "inset -6px 0 14px rgba(0,0,0,0.08)"
-          : "inset 6px 0 14px rgba(0,0,0,0.08)",
+          ? "inset -8px 0 20px rgba(0,0,0,0.07), -2px 0 8px rgba(0,0,0,0.1)"
+          : "inset 8px 0 20px rgba(0,0,0,0.07), 2px 0 8px rgba(0,0,0,0.1)",
         ...style,
       }}
     >
-      {/* Page-edge gradient for depth */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: isLeft
-            ? "linear-gradient(to right, transparent 90%, rgba(0,0,0,0.05))"
-            : "linear-gradient(to left, transparent 90%, rgba(0,0,0,0.05))",
-          pointerEvents: "none",
-          zIndex: 2,
-        }}
-      />
-      {/* Subtle horizontal ruling lines */}
+      {/* Subtle ruled lines */}
       <div
         style={{
           position: "absolute",
           inset: 0,
           backgroundImage:
-            "repeating-linear-gradient(transparent, transparent 27px, rgba(139,105,20,0.03) 27px, rgba(139,105,20,0.03) 28px)",
+            "repeating-linear-gradient(transparent, transparent 29px, rgba(139,105,20,0.04) 29px, rgba(139,105,20,0.04) 30px)",
           pointerEvents: "none",
           zIndex: 1,
         }}
       />
-      {/* Page content */}
+      {/* Inner shadow (spine side) */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: isLeft
+            ? "linear-gradient(to right, transparent 80%, rgba(0,0,0,0.06) 100%)"
+            : "linear-gradient(to left, transparent 80%, rgba(0,0,0,0.06) 100%)",
+          pointerEvents: "none",
+          zIndex: 2,
+        }}
+      />
+      {/* Content */}
       <div style={{ position: "relative", zIndex: 3, width: "100%", height: "100%" }}>
         {children}
       </div>
@@ -115,7 +122,7 @@ function PageSurface({ children, side = "left", style = {} }) {
   );
 }
 
-/** Cover page (dark, leather) */
+/** Cover page (dark leather) */
 function CoverSurface({ side = "left", children }) {
   const isLeft = side === "left";
   return (
@@ -123,26 +130,27 @@ function CoverSurface({ side = "left", children }) {
       style={{
         position: "absolute",
         top: "50%",
-        [isLeft ? "right" : "left"]: "50%",
+        ...(isLeft
+          ? { right: "50%", marginRight: SPINE_W / 2 }
+          : { left: "50%", marginLeft: SPINE_W / 2 }),
         transform: "translateY(-50%)",
         width: PAGE_W,
         height: PAGE_H,
         background:
-          "linear-gradient(160deg, #2a1800 0%, #1a0e02 40%, #0d0a00 80%, #1a0800 100%)",
-        borderRadius: isLeft ? "4px 0 0 4px" : "0 4px 4px 0",
+          "linear-gradient(160deg, #2a1800 0%, #1a0e02 40%, #0d0800 80%, #1a0800 100%)",
+        borderRadius: isLeft ? "6px 0 0 6px" : "0 6px 6px 0",
         overflow: "hidden",
         boxShadow: isLeft
-          ? "-8px 0 32px rgba(0,0,0,0.7), inset -4px 0 12px rgba(0,0,0,0.5)"
-          : "8px 0 32px rgba(0,0,0,0.7), inset 4px 0 12px rgba(0,0,0,0.5)",
+          ? "-10px 0 40px rgba(0,0,0,0.7), inset -4px 0 14px rgba(0,0,0,0.5)"
+          : "10px 0 40px rgba(0,0,0,0.7), inset 4px 0 14px rgba(0,0,0,0.5)",
       }}
     >
-      {/* Leather texture vignette */}
       <div
         style={{
           position: "absolute",
           inset: 0,
           backgroundImage:
-            "radial-gradient(ellipse at 30% 30%, rgba(80,50,0,0.15) 0%, transparent 60%)",
+            "radial-gradient(ellipse at 30% 25%, rgba(90,55,0,0.18) 0%, transparent 55%)",
           pointerEvents: "none",
         }}
       />
@@ -154,118 +162,116 @@ function CoverSurface({ side = "left", children }) {
 }
 
 /**
- * The flipping page leaf — rendered as a CSS `rotateY` element.
- * Flips from the center spine.
- * front = page leaving, back = page arriving.
+ * The flipping page leaf.
+ * Uses CSS rotateY around the spine edge.
+ * Front = page turning away, Back = new page revealed.
  */
-function FlippingLeaf({
-  progress,       // 0→1
-  direction,      // "next" | "prev"
-  frontContent,
-  backContent,
-}) {
-  /**
-   * "next": the RIGHT page lifts and folds LEFT.
-   *   progress=0 → rotateY(0deg)  (right page flat)
-   *   progress=1 → rotateY(-180deg) (fully folded left, back=new left page shows)
-   *
-   * "prev": the LEFT page lifts and folds RIGHT.
-   *   progress=0 → rotateY(0deg)  (left page flat, but we anchor right)
-   *   progress=1 → rotateY(180deg) (fully folded right, back=new right page shows)
-   */
+function FlippingLeaf({ progress, direction, frontContent, backContent }) {
   const p = clamp(progress, 0, 1);
-
   const isNext = direction === "next";
 
-  // Angle: 0 → flat, 1 → 180° folded
+  // Angle: 0 = flat/open, 180 = fully folded to opposite side
+  // For "next": right page flips LEFT  → 0 → -180
+  // For "prev": left page flips RIGHT  → 0 → +180
   const angle = isNext ? -(p * 180) : p * 180;
 
-  // Shadow intensity peaks at mid-flip
+  // Shadow intensity peaks at mid-flip (sin curve)
   const shadow = Math.sin(p * Math.PI);
 
-  // Leaf is anchored at the spine (center): positioned at half-book width from center
+  // During the first half, the FRONT face is showing (0→90°)
+  // At exactly 90° is the edge view — both faces invisible
+  // During second half, the BACK face shows (90°→180°)
+
+  // Curvature illusion:  slight non-linear shadow on the face that is turning
+  const frontShadowStrength = shadow * (p < 0.5 ? 0.35 : 0.1);
+  const backShadowStrength  = shadow * (p > 0.5 ? 0.35 : 0.1);
+
   const leafStyle = {
     position: "absolute",
     top: "50%",
-    // Anchor leaf at spine edge
+    // Pivot at the spine edge
     ...(isNext
-      ? { left: "50%", transformOrigin: "0% 50%" }   // right leaf → pivots at left edge
-      : { right: "50%", transformOrigin: "100% 50%" } // left leaf  → pivots at right edge
-    ),
+      ? { left: "50%", marginLeft: SPINE_W / 2, transformOrigin: "0% 50%" }
+      : { right: "50%", marginRight: SPINE_W / 2, transformOrigin: "100% 50%" }),
     transform: `translateY(-50%) rotateY(${angle}deg)`,
     width: PAGE_W,
     height: PAGE_H,
     transformStyle: "preserve-3d",
-    perspective: "none",
     zIndex: 30,
     willChange: "transform",
   };
 
-  // Front face (the page being turned away)
+  // Front face styles
   const frontStyle = {
     position: "absolute",
     inset: 0,
     backfaceVisibility: "hidden",
     WebkitBackfaceVisibility: "hidden",
+    background: PARCHMENT,
+    borderRadius: isNext ? "0 6px 6px 0" : "6px 0 0 6px",
     overflow: "hidden",
-    background: "linear-gradient(180deg, #fdf8ee 0%, #faf2e0 100%)",
-    borderRadius: isNext ? "0 4px 4px 0" : "4px 0 0 4px",
-    boxShadow: isNext
-      ? `inset ${-shadow * 20}px 0 ${shadow * 40}px rgba(0,0,0,${shadow * 0.25})`
-      : `inset ${shadow * 20}px 0 ${shadow * 40}px rgba(0,0,0,${shadow * 0.25})`,
   };
 
-  // Back face (the new page)
+  // Back face styles — rotated 180° so it faces the other way
   const backStyle = {
     position: "absolute",
     inset: 0,
     backfaceVisibility: "hidden",
     WebkitBackfaceVisibility: "hidden",
     transform: "rotateY(180deg)",
+    background: PARCHMENT_DARK,
+    borderRadius: isNext ? "6px 0 0 6px" : "0 6px 6px 0",
     overflow: "hidden",
-    background: "linear-gradient(180deg, #fdf8ee 0%, #faf2e0 100%)",
-    borderRadius: isNext ? "4px 0 0 4px" : "0 4px 4px 0",
-    boxShadow: isNext
-      ? `inset ${shadow * 20}px 0 ${shadow * 40}px rgba(0,0,0,${shadow * 0.2})`
-      : `inset ${-shadow * 20}px 0 ${shadow * 40}px rgba(0,0,0,${shadow * 0.2})`,
   };
-
-  // Global dark overlay that sweeps across as page flips
-  const overlayOpacity = shadow * 0.18;
 
   return (
     <div style={leafStyle}>
-      {/* Front face */}
+      {/* ── Front face ── */}
       <div style={frontStyle}>
-        <div style={{ position: "relative", zIndex: 1, width: "100%", height: "100%" }}>
+        <div style={{ width: "100%", height: "100%", position: "relative", zIndex: 1 }}>
           {frontContent}
         </div>
-        {/* Shadow sweep overlay */}
+        {/* Shadow sweep: darkens from spine-side as page curls */}
         <div
           style={{
             position: "absolute",
             inset: 0,
             background: isNext
-              ? `linear-gradient(to left, rgba(0,0,0,${overlayOpacity * 2}) 0%, rgba(0,0,0,0) 80%)`
-              : `linear-gradient(to right, rgba(0,0,0,${overlayOpacity * 2}) 0%, rgba(0,0,0,0) 80%)`,
+              ? `linear-gradient(to left, rgba(0,0,0,${frontShadowStrength * 2.5}) 0%, rgba(0,0,0,0) 70%)`
+              : `linear-gradient(to right, rgba(0,0,0,${frontShadowStrength * 2.5}) 0%, rgba(0,0,0,0) 70%)`,
             pointerEvents: "none",
             zIndex: 2,
           }}
         />
+        {/* Highlight band traveling across the page */}
+        {p > 0.05 && p < 0.45 && (
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: isNext
+                ? `linear-gradient(to right, transparent ${(p * 200) - 10}%, rgba(255,255,255,0.12) ${p * 200}%, transparent ${(p * 200) + 10}%)`
+                : `linear-gradient(to left, transparent ${(p * 200) - 10}%, rgba(255,255,255,0.12) ${p * 200}%, transparent ${(p * 200) + 10}%)`,
+              pointerEvents: "none",
+              zIndex: 3,
+            }}
+          />
+        )}
       </div>
 
-      {/* Back face */}
+      {/* ── Back face ── */}
       <div style={backStyle}>
-        <div style={{ position: "relative", zIndex: 1, width: "100%", height: "100%" }}>
+        <div style={{ width: "100%", height: "100%", position: "relative", zIndex: 1 }}>
           {backContent}
         </div>
+        {/* Shadow sweep on the back face */}
         <div
           style={{
             position: "absolute",
             inset: 0,
             background: isNext
-              ? `linear-gradient(to right, rgba(0,0,0,${overlayOpacity * 1.5}) 0%, rgba(0,0,0,0) 80%)`
-              : `linear-gradient(to left, rgba(0,0,0,${overlayOpacity * 1.5}) 0%, rgba(0,0,0,0) 80%)`,
+              ? `linear-gradient(to right, rgba(0,0,0,${backShadowStrength * 2.5}) 0%, rgba(0,0,0,0) 70%)`
+              : `linear-gradient(to left, rgba(0,0,0,${backShadowStrength * 2.5}) 0%, rgba(0,0,0,0) 70%)`,
             pointerEvents: "none",
             zIndex: 2,
           }}
@@ -284,199 +290,181 @@ export default function ThreeBook({
   flipProgress,
   renderPageFunc,
 }) {
-  const totalSpreads = Math.ceil(allPages.length / 2);
-
-  // Derive page indices for current spread
+  /* Derive page indices */
   const leftIdx  = spread * 2;
   const rightIdx = spread * 2 + 1;
-
-  // Pages for the static (resting) spread
   const leftPage  = allPages[leftIdx]  || null;
   const rightPage = allPages[rightIdx] || null;
 
-  // Pages for the spread BEFORE (used for "prev" flip back-face / next-flip front-face)
-  const prevLeftIdx  = (spread - 1) * 2;
-  const prevRightIdx = (spread - 1) * 2 + 1;
-  const prevLeftPage  = allPages[prevLeftIdx]  || null;
-  const prevRightPage = allPages[prevRightIdx] || null;
+  /* Neighboring spread pages */
+  const prevLeftPage  = allPages[(spread - 1) * 2]      || null;
+  const prevRightPage = allPages[(spread - 1) * 2 + 1]  || null;
+  const nextLeftPage  = allPages[(spread + 1) * 2]      || null;
+  const nextRightPage = allPages[(spread + 1) * 2 + 1]  || null;
 
-  // Pages for the spread AFTER (used for "next" flip back-face destination)
-  const nextLeftIdx  = (spread + 1) * 2;
-  const nextRightIdx = (spread + 1) * 2 + 1;
-  const nextLeftPage  = allPages[nextLeftIdx]  || null;
-  const nextRightPage = allPages[nextRightIdx] || null;
+  const isCover = (page) => page && (page.type === "cover" || page.type === "back-cover");
 
-  /* Determine which surface type to use (cover vs parchment) */
-  const isCoverPage = (page) => page && (page.type === "cover" || page.type === "back-cover");
-
-  const SurfaceLeft = isCoverPage(leftPage) ? CoverSurface : PageSurface;
-  const SurfaceRight = isCoverPage(rightPage) ? CoverSurface : PageSurface;
-
-  /* ── Flipping leaf pages ────────────────────────────────────────────────── */
-  // When flipping "next":
-  //   front = current RIGHT page (it lifts up and rotates)
-  //   back  = next LEFT page (revealed as back of the flipped leaf)
-  // When flipping "prev":
-  //   front = current LEFT page (it lifts up and rotates right)
-  //   back  = prev RIGHT page (revealed as back of the flipped leaf)
-
-  let leafFront = null;
-  let leafBack  = null;
+  /* ── Resolve what's shown during a flip ── */
+  let leafFront     = null;
+  let leafBack      = null;
+  let underlayLeft  = leftPage;
+  let underlayRight = rightPage;
 
   if (flipping === "next") {
-    leafFront = rightPage;  // right page folds away
-    leafBack  = nextLeftPage; // next left page revealed
+    leafFront     = rightPage;      // right page lifts and folds left
+    leafBack      = nextLeftPage;   // next left page is revealed on back
+    underlayLeft  = leftPage;       // left stays put
+    underlayRight = nextRightPage;  // right side shows the next-next page underneath
   } else if (flipping === "prev") {
-    leafFront = leftPage;   // left page folds away
-    leafBack  = prevRightPage; // prev right page revealed
+    leafFront     = leftPage;       // left page lifts and folds right
+    leafBack      = prevRightPage;  // prev right page is revealed on back
+    underlayLeft  = prevLeftPage;   // prev left page shows underneath
+    underlayRight = rightPage;      // right stays put
   }
 
-  /* ── Static underlay during flip ──────────────────────────────────────── */
-  // While flipping "next", the current left page stays      + next right page peeks
-  // While flipping "prev", prev left page peeks             + current right page stays
+  const renderSurface = (page, side) => {
+    const El = isCover(page) ? CoverSurface : PageSurface;
+    return <El side={side}>{renderPageFunc(page)}</El>;
+  };
 
-  let underlayLeft  = null;
-  let underlayRight = null;
+  /* ── Dynamic book shadow grows during flip ── */
+  const flipShadow = flipping
+    ? Math.sin(flipProgress * Math.PI) * 0.4
+    : 0;
 
-  if (flipping === "next") {
-    underlayLeft  = leftPage;
-    underlayRight = nextRightPage;
-  } else if (flipping === "prev") {
-    underlayLeft  = prevLeftPage;
-    underlayRight = rightPage;
-  }
-
-  /* ── Book-level drop shadow & ambient ─────────────────────────────────── */
-  const bookShadow =
-    "0 40px 100px rgba(0,0,0,0.55), 0 12px 32px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.25)";
+  const bookShadow = `
+    0 ${50 + flipShadow * 20}px ${120 + flipShadow * 40}px rgba(0,0,0,${0.50 + flipShadow * 0.15}),
+    0 ${16 + flipShadow * 6}px ${40 + flipShadow * 12}px rgba(0,0,0,0.30),
+    0 2px 8px rgba(0,0,0,0.25)
+  `;
 
   return (
-    <div
-      style={{
-        position: "relative",
-        width: BOOK_W,
-        height: BOOK_H,
-        perspective: "2000px",
-        transformStyle: "preserve-3d",
-        /* Subtle tilt for premium 3D look */
-        transform: "rotateX(3deg)",
-        flexShrink: 0,
-      }}
-    >
-      {/* Book body */}
-      <div
-        style={{
-          position: "relative",
-          width: "100%",
-          height: "100%",
-          boxShadow: bookShadow,
-          borderRadius: "6px",
-        }}
-      >
-        {/* ── Static pages (resting or underlay during flip) ── */}
-        {!flipping ? (
-          <>
-            {/* LEFT resting page */}
-            <SurfaceLeft side="left">
-              {renderPageFunc(leftPage)}
-            </SurfaceLeft>
-
-            {/* RIGHT resting page */}
-            <SurfaceRight side="right">
-              {renderPageFunc(rightPage)}
-            </SurfaceRight>
-          </>
-        ) : (
-          <>
-            {/* UNDERLAY LEFT */}
-            {underlayLeft !== undefined && (
-              isCoverPage(underlayLeft)
-                ? <CoverSurface side="left">{renderPageFunc(underlayLeft)}</CoverSurface>
-                : <PageSurface side="left">{renderPageFunc(underlayLeft)}</PageSurface>
-            )}
-
-            {/* UNDERLAY RIGHT */}
-            {underlayRight !== undefined && (
-              isCoverPage(underlayRight)
-                ? <CoverSurface side="right">{renderPageFunc(underlayRight)}</CoverSurface>
-                : <PageSurface side="right">{renderPageFunc(underlayRight)}</PageSurface>
-            )}
-
-            {/* THE FLIPPING LEAF */}
-            <FlippingLeaf
-              progress={flipProgress}
-              direction={flipping}
-              frontContent={renderPageFunc(leafFront)}
-              backContent={renderPageFunc(leafBack)}
-            />
-          </>
-        )}
-
-        {/* ── Book spine ── */}
-        <Spine />
-
-        {/* ── Ambient top-light gloss ── */}
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            height: "40%",
-            background:
-              "linear-gradient(to bottom, rgba(255,255,255,0.04), transparent)",
-            pointerEvents: "none",
-            zIndex: 40,
-            borderRadius: "6px 6px 0 0",
-          }}
-        />
-
-        {/* ── Page edge stack illusion (right side) ── */}
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            right: "calc(50% - 396px)",
-            transform: "translateY(-50%)",
-            width: "16px",
-            height: PAGE_H - 8,
-            background:
-              "repeating-linear-gradient(to right, #f0e8d0 0px, #e8ddc0 1px, #f0e8d0 2px)",
-            boxShadow: "2px 0 8px rgba(0,0,0,0.3)",
-            borderRadius: "0 3px 3px 0",
-            zIndex: 5,
-          }}
-        />
-
-        {/* ── Page edge stack illusion (left side) ── */}
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "calc(50% - 396px)",
-            transform: "translateY(-50%)",
-            width: "16px",
-            height: PAGE_H - 8,
-            background:
-              "repeating-linear-gradient(to left, #f0e8d0 0px, #e8ddc0 1px, #f0e8d0 2px)",
-            boxShadow: "-2px 0 8px rgba(0,0,0,0.3)",
-            borderRadius: "3px 0 0 3px",
-            zIndex: 5,
-          }}
-        />
-      </div>
-
-      {/* ── CSS for transitions ── */}
+    <>
+      {/* Inject styles once */}
       <style>{`
-        @keyframes pageBreath {
-          0%, 100% { box-shadow: 0 40px 100px rgba(0,0,0,0.55), 0 12px 32px rgba(0,0,0,0.35); }
-          50%       { box-shadow: 0 44px 110px rgba(0,0,0,0.60), 0 14px 36px rgba(0,0,0,0.40); }
+        .threebook-root {
+          position: relative;
+          width: ${BOOK_W}px;
+          height: ${BOOK_H}px;
+          /* Perspective must be on the parent, NOT the rotating element */
+          perspective: 2400px;
+          perspective-origin: 50% 45%;
+          flex-shrink: 0;
         }
-
-        @media (max-width: 860px) {
-          /* Handled by parent scaling */
+        .threebook-body {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          transform-style: preserve-3d;
+          /* Slight tilt for premium look */
+          transform: rotateX(4deg);
+          border-radius: 8px;
+        }
+        /* Page-edge stack on right */
+        .threebook-edge-right {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          right: ${(BOOK_W - PAGE_W * 2 - SPINE_W) / 2 - 14}px;
+          width: 14px;
+          height: ${PAGE_H - 4}px;
+          background: repeating-linear-gradient(
+            to right,
+            #ede3c8 0px,
+            #f5edda 1px,
+            #ede3c8 2px,
+            #e8dcc5 3px
+          );
+          border-radius: 0 3px 3px 0;
+          box-shadow: 3px 0 12px rgba(0,0,0,0.28), inset -1px 0 3px rgba(0,0,0,0.1);
+          z-index: 4;
+        }
+        /* Page-edge stack on left */
+        .threebook-edge-left {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          left: ${(BOOK_W - PAGE_W * 2 - SPINE_W) / 2 - 14}px;
+          width: 14px;
+          height: ${PAGE_H - 4}px;
+          background: repeating-linear-gradient(
+            to left,
+            #ede3c8 0px,
+            #f5edda 1px,
+            #ede3c8 2px,
+            #e8dcc5 3px
+          );
+          border-radius: 3px 0 0 3px;
+          box-shadow: -3px 0 12px rgba(0,0,0,0.28), inset 1px 0 3px rgba(0,0,0,0.1);
+          z-index: 4;
+        }
+        /* Top-light gloss over the whole book */
+        .threebook-gloss {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            to bottom,
+            rgba(255,255,255,0.06) 0%,
+            rgba(255,255,255,0.02) 30%,
+            transparent 60%
+          );
+          pointer-events: none;
+          z-index: 50;
+          border-radius: 8px;
+        }
+        /* Floor shadow cast below the book */
+        .threebook-floor-shadow {
+          position: absolute;
+          bottom: -28px;
+          left: 6%;
+          right: 6%;
+          height: 28px;
+          background: radial-gradient(ellipse at 50% 0%, rgba(0,0,0,0.35) 0%, transparent 70%);
+          pointer-events: none;
         }
       `}</style>
-    </div>
+
+      <div className="threebook-root">
+        {/* Floor shadow */}
+        <div className="threebook-floor-shadow" />
+
+        <div
+          className="threebook-body"
+          style={{ boxShadow: bookShadow }}
+        >
+          {/* ── Static pages (resting state or underlay during flip) ── */}
+          {!flipping ? (
+            <>
+              {renderSurface(leftPage, "left")}
+              {renderSurface(rightPage, "right")}
+            </>
+          ) : (
+            <>
+              {/* Underlay pages visible behind the flipping leaf */}
+              {renderSurface(underlayLeft, "left")}
+              {renderSurface(underlayRight, "right")}
+
+              {/* The flipping leaf */}
+              <FlippingLeaf
+                progress={flipProgress}
+                direction={flipping}
+                frontContent={renderPageFunc(leafFront)}
+                backContent={renderPageFunc(leafBack)}
+              />
+            </>
+          )}
+
+          {/* Book spine */}
+          <Spine />
+
+          {/* Page-edge stack illusions */}
+          <div className="threebook-edge-right" />
+          <div className="threebook-edge-left" />
+
+          {/* Top gloss */}
+          <div className="threebook-gloss" />
+        </div>
+      </div>
+    </>
   );
 }
